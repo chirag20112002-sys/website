@@ -1,42 +1,69 @@
 'use client'
 
-import { useState } from 'react'
-import { Save, Globe, Mail, Phone, MapPin, Twitter, Linkedin, Github, Instagram } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { Save, Globe, Mail, Twitter, Linkedin, Github, Instagram, RefreshCw } from 'lucide-react'
+
+const defaults = {
+  site_name: 'AirX Solution',
+  tagline: 'Premium Web Development & Digital Agency',
+  email: 'hello@airxsolution.com',
+  phone: '+1 (234) 567-8900',
+  address: '123 Digital Avenue, Tech City, TC 10001',
+  whatsapp: '1234567890',
+  meta_title: 'AirX Solution – Premium Web Development & Digital Agency',
+  meta_desc: 'AirX Solution delivers premium web development, Shopify store development, custom admin panels, e-commerce solutions, and business automation.',
+  twitter: 'https://twitter.com/airxsolution',
+  linkedin: 'https://linkedin.com/company/airxsolution',
+  github: 'https://github.com/airxsolution',
+  instagram: 'https://instagram.com/airxsolution',
+}
 
 export default function AdminSettingsPage() {
+  const [settings, setSettings] = useState(defaults)
   const [saved, setSaved] = useState(false)
-  const [settings, setSettings] = useState({
-    siteName: 'AirX Solution',
-    tagline: 'Premium Web Development & Digital Agency',
-    email: 'hello@airxsolution.com',
-    phone: '+1 (234) 567-8900',
-    address: '123 Digital Avenue, Tech City, TC 10001',
-    whatsapp: '1234567890',
-    metaTitle: 'AirX Solution – Premium Web Development & Digital Agency',
-    metaDesc: 'AirX Solution delivers premium web development, Shopify store development, custom admin panels, e-commerce solutions, and business automation.',
-    twitter: 'https://twitter.com/airxsolution',
-    linkedin: 'https://linkedin.com/company/airxsolution',
-    github: 'https://github.com/airxsolution',
-    instagram: 'https://instagram.com/airxsolution',
-  })
+  const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
+
+  useEffect(() => {
+    fetch('/api/settings').then(r => r.json()).then(data => {
+      setSettings(s => ({ ...s, ...data }))
+    }).finally(() => setLoading(false))
+  }, [])
 
   const handleChange = (key: string, value: string) => setSettings(prev => ({ ...prev, [key]: value }))
 
-  const handleSave = () => {
-    setSaved(true)
-    setTimeout(() => setSaved(false), 3000)
+  const handleSave = async () => {
+    setSaving(true)
+    try {
+      const res = await fetch('/api/settings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(settings),
+      })
+      if (res.ok) { setSaved(true); setTimeout(() => setSaved(false), 3000) }
+    } finally {
+      setSaving(false)
+    }
   }
+
+  if (loading) return <div className="text-center py-16 text-slate-500">Loading settings…</div>
 
   return (
     <div className="space-y-6 max-w-3xl">
-      <div>
-        <h1 className="text-2xl font-bold font-display text-white">Site Settings</h1>
-        <p className="text-slate-400 text-sm">Manage your website configuration, contact info, and SEO settings.</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold font-display text-white">Site Settings</h1>
+          <p className="text-slate-400 text-sm">Manage your website configuration, contact info, and SEO settings.</p>
+        </div>
+        <button onClick={() => { setLoading(true); fetch('/api/settings').then(r => r.json()).then(d => setSettings(s => ({ ...s, ...d }))).finally(() => setLoading(false)) }}
+          className="p-2 rounded-lg border border-slate-700 text-slate-400 hover:text-white hover:bg-slate-800 transition-all">
+          <RefreshCw className="w-4 h-4" />
+        </button>
       </div>
 
       {saved && (
         <div className="p-4 rounded-xl bg-emerald-900/30 border border-emerald-500/30 text-emerald-400 text-sm flex items-center gap-2">
-          ✓ Settings saved successfully!
+          ✓ Settings saved successfully to database!
         </div>
       )}
 
@@ -49,7 +76,7 @@ export default function AdminSettingsPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-slate-300 mb-1.5">Site Name</label>
-              <input type="text" value={settings.siteName} onChange={e => handleChange('siteName', e.target.value)} className="input-field" />
+              <input type="text" value={settings.site_name} onChange={e => handleChange('site_name', e.target.value)} className="input-field" />
             </div>
             <div>
               <label className="block text-sm font-medium text-slate-300 mb-1.5">Tagline</label>
@@ -92,13 +119,13 @@ export default function AdminSettingsPage() {
         <div className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-slate-300 mb-1.5">Meta Title</label>
-            <input type="text" value={settings.metaTitle} onChange={e => handleChange('metaTitle', e.target.value)} className="input-field" />
-            <p className="text-xs text-slate-500 mt-1">{settings.metaTitle.length}/60 characters</p>
+            <input type="text" value={settings.meta_title} onChange={e => handleChange('meta_title', e.target.value)} className="input-field" />
+            <p className="text-xs text-slate-500 mt-1">{settings.meta_title.length}/60 characters</p>
           </div>
           <div>
             <label className="block text-sm font-medium text-slate-300 mb-1.5">Meta Description</label>
-            <textarea value={settings.metaDesc} onChange={e => handleChange('metaDesc', e.target.value)} rows={3} className="input-field resize-none" />
-            <p className="text-xs text-slate-500 mt-1">{settings.metaDesc.length}/160 characters</p>
+            <textarea value={settings.meta_desc} onChange={e => handleChange('meta_desc', e.target.value)} rows={3} className="input-field resize-none" />
+            <p className="text-xs text-slate-500 mt-1">{settings.meta_desc.length}/160 characters</p>
           </div>
         </div>
       </div>
@@ -117,14 +144,14 @@ export default function AdminSettingsPage() {
               <label className="block text-sm font-medium text-slate-300 mb-1.5 flex items-center gap-2">
                 <s.icon className="w-4 h-4" /> {s.label}
               </label>
-              <input type="url" value={(settings as any)[s.key]} onChange={e => handleChange(s.key, e.target.value)} className="input-field" placeholder={`https://${s.key}.com/...`} />
+              <input type="url" value={(settings as any)[s.key] || ''} onChange={e => handleChange(s.key, e.target.value)} className="input-field" placeholder={`https://${s.key}.com/...`} />
             </div>
           ))}
         </div>
       </div>
 
-      <button onClick={handleSave} className="btn-primary">
-        <Save className="w-4 h-4" /> Save All Settings
+      <button onClick={handleSave} disabled={saving} className="btn-primary">
+        <Save className="w-4 h-4" /> {saving ? 'Saving…' : 'Save All Settings'}
       </button>
     </div>
   )

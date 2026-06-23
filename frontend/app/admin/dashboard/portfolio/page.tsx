@@ -1,41 +1,80 @@
 'use client'
 
-import { useState } from 'react'
-import { Plus, Edit, Trash2, Search } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { Plus, Edit, Trash2, Search, RefreshCw } from 'lucide-react'
 
-const initial = [
-  { id: 1, title: 'LuxeCommerce Fashion Store', category: 'Shopify', client: 'LuxeStyle Inc.', status: 'published' },
-  { id: 2, title: 'FinTrack Analytics Dashboard', category: 'Admin Panel', client: 'FinEdge Corp.', status: 'published' },
-  { id: 3, title: 'MediCare Patient Portal', category: 'Web App', client: 'MediCare Group', status: 'published' },
-  { id: 4, title: 'SwiftDeliver Marketplace', category: 'E-Commerce', client: 'SwiftDeliver Ltd.', status: 'published' },
-  { id: 5, title: 'AutoPilot Sales CRM', category: 'Automation', client: 'GrowthMax Agency', status: 'draft' },
-]
+type Project = {
+  id: string
+  title: string
+  category: string
+  client: string
+  description: string
+  status: string
+}
 
 const categories = ['Web Dev', 'Shopify', 'Admin Panel', 'E-Commerce', 'Web App', 'Automation']
+const emptyForm = { title: '', category: '', client: '', description: '', status: 'draft' as 'draft' | 'published' }
 
 export default function AdminPortfolioPage() {
-  const [projects, setProjects] = useState(initial)
+  const [projects, setProjects] = useState<Project[]>([])
   const [search, setSearch] = useState('')
   const [showForm, setShowForm] = useState(false)
-  const [editing, setEditing] = useState<null | typeof initial[0]>(null)
-  const [form, setForm] = useState({ title: '', category: '', client: '', status: 'draft' as 'draft' | 'published' })
+  const [editing, setEditing] = useState<Project | null>(null)
+  const [form, setForm] = useState(emptyForm)
+  const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
+
+  const load = async () => {
+    setLoading(true)
+    try {
+      const res = await fetch('/api/portfolio?admin=true')
+      if (res.ok) setProjects(await res.json())
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => { load() }, [])
 
   const filtered = projects.filter(p => p.title.toLowerCase().includes(search.toLowerCase()))
 
-  const openCreate = () => { setForm({ title: '', category: '', client: '', status: 'draft' }); setEditing(null); setShowForm(true) }
-  const openEdit = (p: typeof initial[0]) => { setForm({ title: p.title, category: p.category, client: p.client, status: p.status as any }); setEditing(p); setShowForm(true) }
-
-  const handleSave = () => {
-    if (!form.title.trim()) return
-    if (editing) {
-      setProjects(prev => prev.map(p => p.id === editing.id ? { ...p, ...form } : p))
-    } else {
-      setProjects(prev => [...prev, { id: Date.now(), ...form }])
-    }
-    setShowForm(false)
+  const openCreate = () => { setForm(emptyForm); setEditing(null); setShowForm(true) }
+  const openEdit = (p: Project) => {
+    setForm({ title: p.title, category: p.category, client: p.client || '', description: p.description || '', status: p.status as any })
+    setEditing(p)
+    setShowForm(true)
   }
 
-  const handleDelete = (id: number) => { if (confirm('Delete this project?')) setProjects(prev => prev.filter(p => p.id !== id)) }
+  const handleSave = async () => {
+    if (!form.title.trim()) return
+    setSaving(true)
+    try {
+      if (editing) {
+        const res = await fetch('/api/portfolio', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: editing.id, ...form }),
+        })
+        if (res.ok) { const updated = await res.json(); setProjects(prev => prev.map(p => p.id === editing.id ? updated : p)) }
+      } else {
+        const res = await fetch('/api/portfolio', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(form),
+        })
+        if (res.ok) { const created = await res.json(); setProjects(prev => [created, ...prev]) }
+      }
+      setShowForm(false)
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  const handleDelete = async (id: string) => {
+    if (!confirm('Delete this project?')) return
+    const res = await fetch('/api/portfolio', { method: 'DELETE', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id }) })
+    if (res.ok) setProjects(prev => prev.filter(p => p.id !== id))
+  }
 
   return (
     <div className="space-y-6">
@@ -44,9 +83,14 @@ export default function AdminPortfolioPage() {
           <h1 className="text-2xl font-bold font-display text-white">Portfolio</h1>
           <p className="text-slate-400 text-sm">{projects.length} projects</p>
         </div>
-        <button onClick={openCreate} className="btn-primary text-sm py-2.5">
-          <Plus className="w-4 h-4" /> Add Project
-        </button>
+        <div className="flex gap-2">
+          <button onClick={load} className="p-2 rounded-lg border border-slate-700 text-slate-400 hover:text-white hover:bg-slate-800 transition-all">
+            <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+          </button>
+          <button onClick={openCreate} className="btn-primary text-sm py-2.5">
+            <Plus className="w-4 h-4" /> Add Project
+          </button>
+        </div>
       </div>
 
       {showForm && (
@@ -54,21 +98,18 @@ export default function AdminPortfolioPage() {
           <div className="bg-slate-900 border border-slate-700 rounded-2xl p-6 w-full max-w-lg">
             <h2 className="text-lg font-bold text-white font-display mb-5">{editing ? 'Edit Project' : 'Add Project'}</h2>
             <div className="space-y-4">
-              {[
-                { label: 'Project Title', key: 'title', type: 'input', placeholder: 'Project name' },
-                { label: 'Client Name', key: 'client', type: 'input', placeholder: 'Client company' },
-              ].map(field => (
-                <div key={field.key}>
-                  <label className="block text-sm font-medium text-slate-300 mb-1.5">{field.label}</label>
-                  <input
-                    type="text"
-                    value={(form as any)[field.key]}
-                    onChange={e => setForm(f => ({ ...f, [field.key]: e.target.value }))}
-                    placeholder={field.placeholder}
-                    className="input-field"
-                  />
-                </div>
-              ))}
+              <div>
+                <label className="block text-sm font-medium text-slate-300 mb-1.5">Project Title</label>
+                <input type="text" value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} className="input-field" placeholder="Project name" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-slate-300 mb-1.5">Client Name</label>
+                <input type="text" value={form.client} onChange={e => setForm(f => ({ ...f, client: e.target.value }))} className="input-field" placeholder="Client company" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-slate-300 mb-1.5">Description</label>
+                <textarea value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} rows={3} className="input-field resize-none" placeholder="Project description" />
+              </div>
               <div>
                 <label className="block text-sm font-medium text-slate-300 mb-1.5">Category</label>
                 <select value={form.category} onChange={e => setForm(f => ({ ...f, category: e.target.value }))} className="input-field">
@@ -85,7 +126,9 @@ export default function AdminPortfolioPage() {
               </div>
             </div>
             <div className="flex gap-3 mt-6">
-              <button onClick={handleSave} className="btn-primary flex-1 justify-center">Save</button>
+              <button onClick={handleSave} disabled={saving} className="btn-primary flex-1 justify-center">
+                {saving ? 'Saving…' : 'Save'}
+              </button>
               <button onClick={() => setShowForm(false)} className="flex-1 py-2.5 rounded-xl border border-slate-700 text-slate-300 hover:bg-slate-800 text-sm font-medium">Cancel</button>
             </div>
           </div>
@@ -97,26 +140,32 @@ export default function AdminPortfolioPage() {
         <input type="text" placeholder="Search projects..." value={search} onChange={e => setSearch(e.target.value)} className="input-field pl-10" />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {filtered.map(p => (
-          <div key={p.id} className="bg-slate-900 border border-slate-800 rounded-xl p-5">
-            <div className="flex items-start justify-between mb-3">
-              <span className="badge bg-indigo-500/10 text-indigo-400 text-xs">{p.category}</span>
-              <span className={`badge text-xs ${p.status === 'published' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-slate-500/10 text-slate-400'}`}>{p.status}</span>
+      {loading && projects.length === 0 ? (
+        <div className="text-center py-12 text-slate-500">Loading…</div>
+      ) : filtered.length === 0 ? (
+        <div className="text-center py-12 text-slate-500">No projects found.</div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {filtered.map(p => (
+            <div key={p.id} className="bg-slate-900 border border-slate-800 rounded-xl p-5">
+              <div className="flex items-start justify-between mb-3">
+                <span className="badge bg-indigo-500/10 text-indigo-400 text-xs">{p.category}</span>
+                <span className={`badge text-xs ${p.status === 'published' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-slate-500/10 text-slate-400'}`}>{p.status}</span>
+              </div>
+              <h3 className="font-bold text-white mb-1 font-display text-sm">{p.title}</h3>
+              <p className="text-xs text-slate-500 mb-4">{p.client}</p>
+              <div className="flex gap-2">
+                <button onClick={() => openEdit(p)} className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg border border-slate-700 text-slate-300 hover:bg-slate-800 text-xs font-medium transition-colors">
+                  <Edit className="w-3.5 h-3.5" /> Edit
+                </button>
+                <button onClick={() => handleDelete(p.id)} className="px-3 py-2 rounded-lg border border-red-900/50 text-red-400 hover:bg-red-900/20 text-xs transition-colors">
+                  <Trash2 className="w-3.5 h-3.5" />
+                </button>
+              </div>
             </div>
-            <h3 className="font-bold text-white mb-1 font-display text-sm">{p.title}</h3>
-            <p className="text-xs text-slate-500 mb-4">{p.client}</p>
-            <div className="flex gap-2">
-              <button onClick={() => openEdit(p)} className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg border border-slate-700 text-slate-300 hover:bg-slate-800 text-xs font-medium transition-colors">
-                <Edit className="w-3.5 h-3.5" /> Edit
-              </button>
-              <button onClick={() => handleDelete(p.id)} className="px-3 py-2 rounded-lg border border-red-900/50 text-red-400 hover:bg-red-900/20 text-xs transition-colors">
-                <Trash2 className="w-3.5 h-3.5" />
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   )
 }

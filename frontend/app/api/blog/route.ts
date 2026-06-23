@@ -16,11 +16,12 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   const body = await req.json()
   const supabase = createServerClient()
-  const slug = body.title?.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') + '-' + Date.now()
+  const { title, slug, excerpt, content, category, status } = body
+  const finalSlug = slug || title?.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') + '-' + Date.now()
 
   const { data, error } = await supabase
     .from('blog_posts')
-    .insert({ ...body, slug })
+    .insert({ title, slug: finalSlug, excerpt, content, category, status: status ?? 'draft' })
     .select()
     .single()
 
@@ -30,11 +31,12 @@ export async function POST(req: NextRequest) {
 
 export async function PUT(req: NextRequest) {
   const body = await req.json()
-  const { id, ...fields } = body
+  const { id, title, slug, excerpt, content, category, status } = body
   const supabase = createServerClient()
+
   const { data, error } = await supabase
     .from('blog_posts')
-    .update({ ...fields, updated_at: new Date().toISOString() })
+    .update({ title, slug, excerpt, content, category, status, updated_at: new Date().toISOString() })
     .eq('id', id)
     .select()
     .single()

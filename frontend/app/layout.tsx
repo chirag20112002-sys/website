@@ -12,6 +12,7 @@ export const viewport: Viewport = {
 }
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://website-q9ym-lxhami1lg-chirag12.vercel.app'),
   title: {
     default: 'AirX Solution – Premium Web Development & Digital Agency',
     template: '%s | AirX Solution',

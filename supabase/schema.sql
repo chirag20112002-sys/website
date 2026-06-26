@@ -1,12 +1,13 @@
 -- ============================================================
 -- AirX Solution — Supabase Database Schema
--- Run this in: Supabase Dashboard > SQL Editor > New Query
+-- Safe to run multiple times (idempotent)
+-- Run in: Supabase Dashboard > SQL Editor > New Query
 -- ============================================================
 
--- Enable UUID extension
 create extension if not exists "uuid-ossp";
 
--- ─── Contact Messages ────────────────────────────────────────
+-- ─── Tables ──────────────────────────────────────────────────
+
 create table if not exists public.contact_messages (
   id          uuid primary key default uuid_generate_v4(),
   name        text not null,
@@ -20,7 +21,6 @@ create table if not exists public.contact_messages (
   created_at  timestamptz not null default now()
 );
 
--- ─── Blog Posts ──────────────────────────────────────────────
 create table if not exists public.blog_posts (
   id          uuid primary key default uuid_generate_v4(),
   title       text not null,
@@ -34,7 +34,6 @@ create table if not exists public.blog_posts (
   updated_at  timestamptz not null default now()
 );
 
--- ─── Portfolio Projects ──────────────────────────────────────
 create table if not exists public.portfolio_projects (
   id            uuid primary key default uuid_generate_v4(),
   title         text not null,
@@ -48,7 +47,6 @@ create table if not exists public.portfolio_projects (
   created_at    timestamptz not null default now()
 );
 
--- ─── Testimonials ────────────────────────────────────────────
 create table if not exists public.testimonials (
   id          uuid primary key default uuid_generate_v4(),
   name        text not null,
@@ -61,7 +59,6 @@ create table if not exists public.testimonials (
   created_at  timestamptz not null default now()
 );
 
--- ─── Site Settings ───────────────────────────────────────────
 create table if not exists public.site_settings (
   key         text primary key,
   value       text not null,
@@ -69,8 +66,31 @@ create table if not exists public.site_settings (
 );
 
 -- ─── Row Level Security ──────────────────────────────────────
--- Contact messages: anyone can insert, only service role reads
-alter table public.contact_messages enable row level security;
+
+alter table public.contact_messages  enable row level security;
+alter table public.blog_posts        enable row level security;
+alter table public.portfolio_projects enable row level security;
+alter table public.testimonials      enable row level security;
+alter table public.site_settings     enable row level security;
+
+-- Drop existing policies so we can recreate safely
+drop policy if exists "Anyone can submit contact form"     on public.contact_messages;
+drop policy if exists "Service role reads all messages"    on public.contact_messages;
+drop policy if exists "Service role updates messages"      on public.contact_messages;
+
+drop policy if exists "Anyone reads published posts"       on public.blog_posts;
+drop policy if exists "Service role full access to posts"  on public.blog_posts;
+
+drop policy if exists "Anyone reads published projects"    on public.portfolio_projects;
+drop policy if exists "Service role full access to projects" on public.portfolio_projects;
+
+drop policy if exists "Anyone reads published testimonials" on public.testimonials;
+drop policy if exists "Service role full access to testimonials" on public.testimonials;
+
+drop policy if exists "Anyone reads settings"              on public.site_settings;
+drop policy if exists "Service role manages settings"      on public.site_settings;
+
+-- contact_messages
 create policy "Anyone can submit contact form"
   on public.contact_messages for insert to anon with check (true);
 create policy "Service role reads all messages"
@@ -78,29 +98,25 @@ create policy "Service role reads all messages"
 create policy "Service role updates messages"
   on public.contact_messages for update using (auth.role() = 'service_role');
 
--- Blog posts: anyone can read published ones
-alter table public.blog_posts enable row level security;
+-- blog_posts
 create policy "Anyone reads published posts"
   on public.blog_posts for select using (status = 'published' or auth.role() = 'service_role');
 create policy "Service role full access to posts"
   on public.blog_posts for all using (auth.role() = 'service_role');
 
--- Portfolio: anyone can read published
-alter table public.portfolio_projects enable row level security;
+-- portfolio_projects
 create policy "Anyone reads published projects"
   on public.portfolio_projects for select using (status = 'published' or auth.role() = 'service_role');
 create policy "Service role full access to projects"
   on public.portfolio_projects for all using (auth.role() = 'service_role');
 
--- Testimonials: anyone can read published
-alter table public.testimonials enable row level security;
+-- testimonials
 create policy "Anyone reads published testimonials"
   on public.testimonials for select using (status = 'published' or auth.role() = 'service_role');
 create policy "Service role full access to testimonials"
   on public.testimonials for all using (auth.role() = 'service_role');
 
--- Site settings: anyone can read
-alter table public.site_settings enable row level security;
+-- site_settings
 create policy "Anyone reads settings"
   on public.site_settings for select using (true);
 create policy "Service role manages settings"
@@ -108,18 +124,18 @@ create policy "Service role manages settings"
 
 -- ─── Seed Default Site Settings ──────────────────────────────
 insert into public.site_settings (key, value) values
-  ('site_name',       'AirX Solution'),
-  ('tagline',         'Premium Web Development & Digital Agency'),
-  ('email',           'hello@airxsolution.com'),
-  ('phone',           '+1 (234) 567-8900'),
-  ('address',         '123 Digital Avenue, Tech City, TC 10001'),
-  ('whatsapp',        '1234567890'),
-  ('meta_title',      'AirX Solution – Premium Web Development & Digital Agency'),
-  ('meta_desc',       'AirX Solution delivers premium web development, Shopify store development, custom admin panels, e-commerce solutions, and business automation.'),
-  ('twitter',         'https://twitter.com/airxsolution'),
-  ('linkedin',        'https://linkedin.com/company/airxsolution'),
-  ('github',          'https://github.com/airxsolution'),
-  ('instagram',       'https://instagram.com/airxsolution')
+  ('site_name',  'AirX Solution'),
+  ('tagline',    'Premium Web Development & Digital Agency'),
+  ('email',      'hello@airxsolution.com'),
+  ('phone',      '+1 (234) 567-8900'),
+  ('address',    '123 Digital Avenue, Tech City, TC 10001'),
+  ('whatsapp',   '1234567890'),
+  ('meta_title', 'AirX Solution – Premium Web Development & Digital Agency'),
+  ('meta_desc',  'AirX Solution delivers premium web development, Shopify store development, custom admin panels, e-commerce solutions, and business automation.'),
+  ('twitter',    'https://twitter.com/airxsolution'),
+  ('linkedin',   'https://linkedin.com/company/airxsolution'),
+  ('github',     'https://github.com/airxsolution'),
+  ('instagram',  'https://instagram.com/airxsolution')
 on conflict (key) do nothing;
 
 -- ─── Seed Sample Portfolio ───────────────────────────────────

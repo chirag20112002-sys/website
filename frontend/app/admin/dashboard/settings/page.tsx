@@ -71,16 +71,6 @@ export default function AdminSettingsPage() {
         </button>
       </div>
 
-      {saved && (
-        <div className="p-4 rounded-xl bg-emerald-900/30 border border-emerald-500/30 text-emerald-400 text-sm flex items-center gap-2">
-          ✓ Settings saved successfully to database!
-        </div>
-      )}
-      {saveError && (
-        <div className="p-4 rounded-xl bg-red-900/30 border border-red-500/30 text-red-400 text-sm">
-          ✗ Error: {saveError}
-        </div>
-      )}
 
       {/* General */}
       <div className="bg-slate-900 border border-slate-800 rounded-xl p-6">
@@ -165,9 +155,29 @@ export default function AdminSettingsPage() {
         </div>
       </div>
 
-      <button onClick={handleSave} disabled={saving} className="btn-primary">
-        <Save className="w-4 h-4" /> {saving ? 'Saving…' : 'Save All Settings'}
-      </button>
+      {saveError && (
+        <div className="p-4 rounded-xl bg-red-900/30 border border-red-500/30 text-red-400 text-sm">
+          ✗ Error: {saveError}
+        </div>
+      )}
+
+      <div className="flex items-center gap-4">
+        <button onClick={handleSave} disabled={saving} className="btn-primary">
+          <Save className="w-4 h-4" /> {saving ? 'Saving…' : 'Save All Settings'}
+        </button>
+        {saved && (
+          <span className="text-emerald-400 text-sm font-medium flex items-center gap-1.5">
+            ✓ Saved successfully!
+          </span>
+        )}
+      </div>
+
+      {/* Fixed toast — visible regardless of scroll position */}
+      {saved && (
+        <div className="fixed bottom-6 right-6 z-50 px-5 py-3 rounded-xl bg-emerald-600 text-white text-sm font-semibold shadow-xl flex items-center gap-2 animate-in slide-in-from-bottom-4">
+          ✓ Settings saved to database!
+        </div>
+      )}
     </div>
   )
 }

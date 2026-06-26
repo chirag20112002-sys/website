@@ -12,18 +12,23 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
-  const body = await req.json() // { key: string, value: string }[]
+  const body = await req.json()
   const supabase = createServerClient()
 
   const rows = Array.isArray(body)
     ? body
-    : Object.entries(body).map(([key, value]) => ({ key, value: String(value), updated_at: new Date().toISOString() }))
+    : Object.entries(body as Record<string, unknown>)
+        .filter(([k]) => k !== 'error')
+        .map(([key, value]) => ({ key, value: String(value ?? ''), updated_at: new Date().toISOString() }))
 
   const { data, error } = await supabase
     .from('site_settings')
     .upsert(rows, { onConflict: 'key' })
     .select()
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+  if (error) {
+    console.error('[settings POST]', error)
+    return NextResponse.json({ error: error.message }, { status: 500 })
+  }
   return NextResponse.json({ success: true, data })
 }

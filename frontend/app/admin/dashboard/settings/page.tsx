@@ -21,12 +21,13 @@ const defaults = {
 export default function AdminSettingsPage() {
   const [settings, setSettings] = useState(defaults)
   const [saved, setSaved] = useState(false)
+  const [saveError, setSaveError] = useState('')
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
 
   useEffect(() => {
     fetch('/api/settings').then(r => r.json()).then(data => {
-      setSettings(s => ({ ...s, ...data }))
+      if (!data.error) setSettings(s => ({ ...s, ...data }))
     }).finally(() => setLoading(false))
   }, [])
 
@@ -34,13 +35,22 @@ export default function AdminSettingsPage() {
 
   const handleSave = async () => {
     setSaving(true)
+    setSaveError('')
     try {
       const res = await fetch('/api/settings', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(settings),
       })
-      if (res.ok) { setSaved(true); setTimeout(() => setSaved(false), 3000) }
+      const json = await res.json()
+      if (res.ok) {
+        setSaved(true)
+        setTimeout(() => setSaved(false), 3000)
+      } else {
+        setSaveError(json.error || `Save failed (${res.status})`)
+      }
+    } catch (e: any) {
+      setSaveError(e.message || 'Network error')
     } finally {
       setSaving(false)
     }
@@ -64,6 +74,11 @@ export default function AdminSettingsPage() {
       {saved && (
         <div className="p-4 rounded-xl bg-emerald-900/30 border border-emerald-500/30 text-emerald-400 text-sm flex items-center gap-2">
           ✓ Settings saved successfully to database!
+        </div>
+      )}
+      {saveError && (
+        <div className="p-4 rounded-xl bg-red-900/30 border border-red-500/30 text-red-400 text-sm">
+          ✗ Error: {saveError}
         </div>
       )}
 

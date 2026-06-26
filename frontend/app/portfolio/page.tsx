@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
 import { motion, useInView, AnimatePresence } from 'framer-motion'
 import { ArrowRight, ExternalLink, Code2, ShoppingBag, LayoutDashboard, ShoppingCart, Globe, Bot, X } from 'lucide-react'
@@ -16,115 +16,43 @@ function FadeIn({ children, delay = 0, className = '' }: { children: React.React
   )
 }
 
+const categoryConfig: Record<string, { color: string; icon: React.ElementType }> = {
+  'Shopify':     { color: 'from-indigo-600 to-purple-700',  icon: ShoppingBag },
+  'Admin Panel': { color: 'from-emerald-600 to-teal-700',   icon: LayoutDashboard },
+  'Web App':     { color: 'from-blue-600 to-cyan-700',      icon: Globe },
+  'E-Commerce':  { color: 'from-orange-600 to-amber-700',   icon: ShoppingCart },
+  'Automation':  { color: 'from-violet-600 to-purple-700',  icon: Bot },
+  'Web Dev':     { color: 'from-rose-600 to-pink-700',      icon: Code2 },
+}
+const defaultConfig = { color: 'from-slate-600 to-slate-700', icon: Globe }
+
 const categories = ['All', 'Web Dev', 'Shopify', 'Admin Panel', 'E-Commerce', 'Web App', 'Automation']
 
-const projects = [
-  {
-    title: 'LuxeCommerce Fashion Store',
-    category: 'Shopify',
-    icon: ShoppingBag,
-    color: 'from-indigo-600 to-purple-700',
-    desc: 'A premium fashion brand Shopify store with 50k+ products, custom checkout flow, subscription features, and a fully custom theme.',
-    tech: ['Shopify', 'Liquid', 'JavaScript', 'Custom Theme'],
-    results: ['340% increase in conversions', 'Sub-2s page load', '50k+ products'],
-    client: 'LuxeStyle Inc.',
-    duration: '6 weeks',
-  },
-  {
-    title: 'FinTrack Analytics Dashboard',
-    category: 'Admin Panel',
-    icon: LayoutDashboard,
-    color: 'from-emerald-600 to-teal-700',
-    desc: 'Real-time financial analytics dashboard processing $2M+ in monthly transactions with multi-currency support and automated reporting.',
-    tech: ['React', 'Node.js', 'MongoDB', 'Chart.js'],
-    results: ['$2M+ monthly volume', '99.9% uptime', '15hrs/week saved'],
-    client: 'FinEdge Corp.',
-    duration: '10 weeks',
-  },
-  {
-    title: 'MediCare Patient Portal',
-    category: 'Web App',
-    icon: Globe,
-    color: 'from-blue-600 to-cyan-700',
-    desc: 'HIPAA-compliant patient management system serving 5,000+ users with appointment scheduling, medical records, and telehealth features.',
-    tech: ['Next.js', 'PostgreSQL', 'AWS', 'TypeScript'],
-    results: ['5,000+ active users', 'HIPAA compliant', '4.9★ app rating'],
-    client: 'MediCare Group',
-    duration: '14 weeks',
-  },
-  {
-    title: 'SwiftDeliver Marketplace',
-    category: 'E-Commerce',
-    icon: ShoppingCart,
-    color: 'from-orange-600 to-amber-700',
-    desc: 'Multi-vendor marketplace with real-time order tracking, integrated logistics API, and a native mobile app companion.',
-    tech: ['React', 'Node.js', 'MySQL', 'Stripe'],
-    results: ['200+ vendors', 'Real-time tracking', '10k+ orders/month'],
-    client: 'SwiftDeliver Ltd.',
-    duration: '18 weeks',
-  },
-  {
-    title: 'AutoPilot Sales CRM',
-    category: 'Automation',
-    icon: Bot,
-    color: 'from-violet-600 to-purple-700',
-    desc: 'AI-powered sales CRM that automated 70% of the client\'s follow-up process, integrated with HubSpot, Slack, and email platforms.',
-    tech: ['React', 'Python', 'OpenAI', 'HubSpot API'],
-    results: ['70% tasks automated', '3x sales pipeline', '40hrs/week saved'],
-    client: 'GrowthMax Agency',
-    duration: '8 weeks',
-  },
-  {
-    title: 'EduLearn Academy Platform',
-    category: 'Web Dev',
-    icon: Code2,
-    color: 'from-rose-600 to-pink-700',
-    desc: 'E-learning platform with 10,000+ enrolled students, interactive video courses, quizzes, certificates, and a live tutoring module.',
-    tech: ['Next.js', 'MongoDB', 'Stripe', 'VideoJS'],
-    results: ['10k+ students', '500+ courses', '95% completion rate'],
-    client: 'EduLearn Inc.',
-    duration: '16 weeks',
-  },
-  {
-    title: 'GreenLeaf Organic Shop',
-    category: 'Shopify',
-    icon: ShoppingBag,
-    color: 'from-green-600 to-emerald-700',
-    desc: 'A sustainable organic products Shopify store with subscription boxes, custom product bundles, and an eco-conscious theme.',
-    tech: ['Shopify Plus', 'Liquid', 'ReCharge', 'Klaviyo'],
-    results: ['$500k revenue/month', '12k subscribers', '60% repeat purchase'],
-    client: 'GreenLeaf Co.',
-    duration: '5 weeks',
-  },
-  {
-    title: 'TechNova SaaS Dashboard',
-    category: 'Admin Panel',
-    icon: LayoutDashboard,
-    color: 'from-cyan-600 to-blue-700',
-    desc: 'Feature-rich SaaS admin panel for a B2B software company, with user management, billing, analytics, and white-labeling.',
-    tech: ['React', 'Express', 'PostgreSQL', 'Stripe'],
-    results: ['500+ B2B clients', 'White-label ready', '$100k MRR tracked'],
-    client: 'TechNova Labs',
-    duration: '12 weeks',
-  },
-  {
-    title: 'StyleVault Brand Site',
-    category: 'Web Dev',
-    icon: Code2,
-    color: 'from-fuchsia-600 to-purple-700',
-    desc: 'A premium fashion brand website with immersive animations, a lookbook gallery, and an integrated wholesale inquiry system.',
-    tech: ['Next.js', 'Framer Motion', 'Sanity CMS', 'Tailwind'],
-    results: ['98/100 Lighthouse score', '250% traffic increase', 'Featured in Awwwards'],
-    client: 'StyleVault Fashion',
-    duration: '7 weeks',
-  },
-]
+type Project = {
+  id: string
+  title: string
+  category: string
+  client: string
+  description: string
+  tech: string[]
+  results: string[]
+  status: string
+}
 
-type Project = typeof projects[0]
+type SelectedProject = Project & { color: string; icon: React.ElementType }
 
 export default function PortfolioPage() {
   const [active, setActive] = useState('All')
-  const [selected, setSelected] = useState<Project | null>(null)
+  const [selected, setSelected] = useState<SelectedProject | null>(null)
+  const [projects, setProjects] = useState<Project[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    fetch('/api/portfolio')
+      .then(r => r.json())
+      .then(data => Array.isArray(data) ? setProjects(data) : null)
+      .finally(() => setLoading(false))
+  }, [])
 
   const filtered = active === 'All' ? projects : projects.filter(p => p.category === active)
 
@@ -170,53 +98,61 @@ export default function PortfolioPage() {
       {/* Grid */}
       <section className="py-16 bg-white dark:bg-[#0a0f1e]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <AnimatePresence>
-              {filtered.map((p, i) => (
-                <motion.div
-                  key={p.title}
-                  layout
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.9 }}
-                  transition={{ duration: 0.3, delay: i * 0.05 }}
-                >
-                  <div
-                    className="glass-card overflow-hidden card-hover cursor-pointer group"
-                    onClick={() => setSelected(p)}
-                  >
-                    <div className={`h-52 bg-gradient-to-br ${p.color} relative overflow-hidden`}>
-                      <p.icon className="w-32 h-32 text-white/10 absolute -bottom-4 -right-4" />
-                      <div className="absolute inset-0 p-6 flex flex-col justify-between">
-                        <span className="badge bg-white/20 text-white self-start">{p.category}</span>
-                        <div>
-                          <h3 className="text-xl font-bold text-white font-display">{p.title}</h3>
-                          <p className="text-sm text-white/70 mt-1">{p.client}</p>
+          {loading ? (
+            <div className="text-center py-20 text-slate-400">Loading projects…</div>
+          ) : filtered.length === 0 ? (
+            <div className="text-center py-20 text-slate-400">No projects found in this category.</div>
+          ) : (
+            <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <AnimatePresence>
+                {filtered.map((p, i) => {
+                  const cfg = categoryConfig[p.category] ?? defaultConfig
+                  const IconComp = cfg.icon
+                  const proj: SelectedProject = { ...p, color: cfg.color, icon: cfg.icon }
+                  return (
+                    <motion.div
+                      key={p.id}
+                      layout
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.9 }}
+                      transition={{ duration: 0.3, delay: i * 0.05 }}
+                    >
+                      <div className="glass-card overflow-hidden card-hover cursor-pointer group" onClick={() => setSelected(proj)}>
+                        <div className={`h-52 bg-gradient-to-br ${cfg.color} relative overflow-hidden`}>
+                          <IconComp className="w-32 h-32 text-white/10 absolute -bottom-4 -right-4" />
+                          <div className="absolute inset-0 p-6 flex flex-col justify-between">
+                            <span className="badge bg-white/20 text-white self-start">{p.category}</span>
+                            <div>
+                              <h3 className="text-xl font-bold text-white font-display">{p.title}</h3>
+                              <p className="text-sm text-white/70 mt-1">{p.client}</p>
+                            </div>
+                          </div>
+                          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-center justify-center">
+                            <div className="w-12 h-12 rounded-full bg-white opacity-0 group-hover:opacity-100 scale-50 group-hover:scale-100 transition-all duration-300 flex items-center justify-center shadow-lg">
+                              <ExternalLink className="w-5 h-5 text-slate-800" />
+                            </div>
+                          </div>
+                        </div>
+                        <div className="p-5">
+                          <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed mb-4 line-clamp-2">{p.description}</p>
+                          <div className="flex flex-wrap gap-1.5">
+                            {(p.tech ?? []).slice(0, 3).map(t => (
+                              <span key={t} className="badge bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">{t}</span>
+                            ))}
+                          </div>
                         </div>
                       </div>
-                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-center justify-center">
-                        <div className="w-12 h-12 rounded-full bg-white opacity-0 group-hover:opacity-100 scale-50 group-hover:scale-100 transition-all duration-300 flex items-center justify-center shadow-lg">
-                          <ExternalLink className="w-5 h-5 text-slate-800" />
-                        </div>
-                      </div>
-                    </div>
-                    <div className="p-5">
-                      <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed mb-4 line-clamp-2">{p.desc}</p>
-                      <div className="flex flex-wrap gap-1.5">
-                        {p.tech.slice(0, 3).map(t => (
-                          <span key={t} className="badge bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">{t}</span>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </AnimatePresence>
-          </motion.div>
+                    </motion.div>
+                  )
+                })}
+              </AnimatePresence>
+            </motion.div>
+          )}
         </div>
       </section>
 
-      {/* Project Modal */}
+      {/* Modal */}
       <AnimatePresence>
         {selected && (
           <motion.div
@@ -244,32 +180,36 @@ export default function PortfolioPage() {
                   </div>
                   <div>
                     <h3 className="text-2xl font-bold text-white font-display">{selected.title}</h3>
-                    <p className="text-white/70 mt-1">{selected.client} · {selected.duration}</p>
+                    <p className="text-white/70 mt-1">{selected.client}</p>
                   </div>
                 </div>
               </div>
               <div className="p-6">
-                <p className="text-slate-600 dark:text-slate-400 leading-relaxed mb-6">{selected.desc}</p>
+                <p className="text-slate-600 dark:text-slate-400 leading-relaxed mb-6">{selected.description}</p>
                 <div className="grid grid-cols-2 gap-6 mb-6">
-                  <div>
-                    <h5 className="font-semibold text-slate-800 dark:text-white mb-3 font-display">Tech Stack</h5>
-                    <div className="flex flex-wrap gap-2">
-                      {selected.tech.map(t => (
-                        <span key={t} className="badge bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400">{t}</span>
-                      ))}
+                  {(selected.tech ?? []).length > 0 && (
+                    <div>
+                      <h5 className="font-semibold text-slate-800 dark:text-white mb-3 font-display">Tech Stack</h5>
+                      <div className="flex flex-wrap gap-2">
+                        {selected.tech.map(t => (
+                          <span key={t} className="badge bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400">{t}</span>
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                  <div>
-                    <h5 className="font-semibold text-slate-800 dark:text-white mb-3 font-display">Key Results</h5>
-                    <ul className="space-y-1.5">
-                      {selected.results.map(r => (
-                        <li key={r} className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
-                          <div className="w-1.5 h-1.5 rounded-full bg-indigo-500 flex-shrink-0" />
-                          {r}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
+                  )}
+                  {(selected.results ?? []).length > 0 && (
+                    <div>
+                      <h5 className="font-semibold text-slate-800 dark:text-white mb-3 font-display">Key Results</h5>
+                      <ul className="space-y-1.5">
+                        {selected.results.map(r => (
+                          <li key={r} className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
+                            <div className="w-1.5 h-1.5 rounded-full bg-indigo-500 flex-shrink-0" />
+                            {r}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
                 </div>
                 <Link href="/contact" className="btn-primary w-full justify-center">
                   Start a Similar Project <ArrowRight className="w-4 h-4" />

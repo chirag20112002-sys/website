@@ -11,6 +11,9 @@ import {
 } from 'lucide-react'
 import SiteLayout from '@/components/SiteLayout'
 
+type LiveTestimonial = { id: string; name: string; role: string; company: string; rating: number; text: string }
+type LiveProject = { id: string; title: string; category: string; client: string; description: string }
+
 /* ─── Data ────────────────────────────────────────────────────── */
 const services = [
   { icon: Code2, title: 'Website Development', desc: 'Custom, blazing-fast websites built with modern frameworks. Pixel-perfect design meets rock-solid performance.', color: 'from-indigo-500 to-purple-600', href: '/services#web' },
@@ -91,7 +94,26 @@ function FadeIn({ children, delay = 0, className = '' }: { children: React.React
   )
 }
 
+const categoryColors: Record<string, string> = {
+  'Shopify': 'from-indigo-600 to-purple-700', 'Admin Panel': 'from-emerald-600 to-teal-700',
+  'Web App': 'from-blue-600 to-cyan-700', 'E-Commerce': 'from-orange-600 to-amber-700',
+  'Automation': 'from-violet-600 to-purple-700', 'Web Dev': 'from-rose-600 to-pink-700',
+}
+
+const categoryIcons: Record<string, React.ElementType> = {
+  'Shopify': ShoppingBag, 'Admin Panel': LayoutDashboard, 'Web App': Globe,
+  'E-Commerce': ShoppingCart, 'Automation': Bot, 'Web Dev': Code2,
+}
+
 export default function HomePage() {
+  const [liveTestimonials, setLiveTestimonials] = useState<LiveTestimonial[]>([])
+  const [liveProjects, setLiveProjects] = useState<LiveProject[]>([])
+
+  useEffect(() => {
+    fetch('/api/testimonials').then(r => r.json()).then(d => Array.isArray(d) && setLiveTestimonials(d.slice(0, 4)))
+    fetch('/api/portfolio').then(r => r.json()).then(d => Array.isArray(d) && setLiveProjects(d.slice(0, 6)))
+  }, [])
+
   return (
     <SiteLayout>
       {/* ── Hero ─────────────────────────────────────────────── */}
@@ -347,27 +369,33 @@ export default function HomePage() {
           </FadeIn>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {portfolio.map((p, i) => (
-              <FadeIn key={p.title} delay={i * 0.1}>
-                <div className="glass-card overflow-hidden card-hover group cursor-pointer">
-                  <div className={`h-48 bg-gradient-to-br ${p.color} flex items-center justify-center relative overflow-hidden`}>
-                    <p.icon className="w-20 h-20 text-white/20 absolute" />
-                    <div className="text-center text-white relative z-10 p-6">
-                      <span className="badge bg-white/20 text-white text-xs mb-3">{p.category}</span>
-                      <h4 className="font-bold text-lg font-display">{p.title}</h4>
-                    </div>
-                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
-                      <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all scale-50 group-hover:scale-100 duration-300">
-                        <ArrowRight className="w-5 h-5 text-slate-800" />
+            {(liveProjects.length > 0 ? liveProjects : portfolio).map((p, i) => {
+              const isLive = 'description' in p
+              const color = isLive ? (categoryColors[(p as LiveProject).category] ?? 'from-slate-600 to-slate-700') : (p as typeof portfolio[0]).color
+              const IconComp = isLive ? (categoryIcons[(p as LiveProject).category] ?? Globe) : (p as typeof portfolio[0]).icon
+              const desc = isLive ? (p as LiveProject).description : (p as typeof portfolio[0]).desc
+              return (
+                <FadeIn key={p.title} delay={i * 0.1}>
+                  <div className="glass-card overflow-hidden card-hover group cursor-pointer">
+                    <div className={`h-48 bg-gradient-to-br ${color} flex items-center justify-center relative overflow-hidden`}>
+                      <IconComp className="w-20 h-20 text-white/20 absolute" />
+                      <div className="text-center text-white relative z-10 p-6">
+                        <span className="badge bg-white/20 text-white text-xs mb-3">{p.category}</span>
+                        <h4 className="font-bold text-lg font-display">{p.title}</h4>
+                      </div>
+                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
+                        <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all scale-50 group-hover:scale-100 duration-300">
+                          <ArrowRight className="w-5 h-5 text-slate-800" />
+                        </div>
                       </div>
                     </div>
+                    <div className="p-5">
+                      <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">{desc}</p>
+                    </div>
                   </div>
-                  <div className="p-5">
-                    <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">{p.desc}</p>
-                  </div>
-                </div>
-              </FadeIn>
-            ))}
+                </FadeIn>
+              )
+            })}
           </div>
 
           <FadeIn className="text-center mt-12">
@@ -388,28 +416,31 @@ export default function HomePage() {
           </FadeIn>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {testimonials.map((t, i) => (
-              <FadeIn key={t.name} delay={i * 0.1}>
-                <div className="glass-card p-7 card-hover relative">
-                  <Quote className="w-8 h-8 text-indigo-500/30 absolute top-5 right-5" />
-                  <div className="flex items-center gap-1 mb-4">
-                    {Array.from({ length: t.rating }).map((_, j) => (
-                      <Star key={j} className="w-4 h-4 fill-amber-400 text-amber-400" />
-                    ))}
-                  </div>
-                  <p className="text-slate-600 dark:text-slate-300 leading-relaxed mb-6 italic">"{t.text}"</p>
-                  <div className="flex items-center gap-3">
-                    <div className={`w-11 h-11 rounded-full gradient-bg flex items-center justify-center text-white font-bold text-sm`}>
-                      {t.avatar}
+            {(liveTestimonials.length > 0 ? liveTestimonials : testimonials).map((t, i) => {
+              const avatar = 'avatar' in t ? (t as typeof testimonials[0]).avatar : t.name.split(' ').map((n: string) => n[0]).join('').slice(0, 2)
+              return (
+                <FadeIn key={t.name} delay={i * 0.1}>
+                  <div className="glass-card p-7 card-hover relative">
+                    <Quote className="w-8 h-8 text-indigo-500/30 absolute top-5 right-5" />
+                    <div className="flex items-center gap-1 mb-4">
+                      {Array.from({ length: t.rating }).map((_, j) => (
+                        <Star key={j} className="w-4 h-4 fill-amber-400 text-amber-400" />
+                      ))}
                     </div>
-                    <div>
-                      <p className="font-semibold text-slate-800 dark:text-white">{t.name}</p>
-                      <p className="text-sm text-slate-500 dark:text-slate-400">{t.role}, {t.company}</p>
+                    <p className="text-slate-600 dark:text-slate-300 leading-relaxed mb-6 italic">"{t.text}"</p>
+                    <div className="flex items-center gap-3">
+                      <div className="w-11 h-11 rounded-full gradient-bg flex items-center justify-center text-white font-bold text-sm">
+                        {avatar}
+                      </div>
+                      <div>
+                        <p className="font-semibold text-slate-800 dark:text-white">{t.name}</p>
+                        <p className="text-sm text-slate-500 dark:text-slate-400">{t.role}, {t.company}</p>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </FadeIn>
-            ))}
+                </FadeIn>
+              )
+            })}
           </div>
 
           <FadeIn className="text-center mt-10">

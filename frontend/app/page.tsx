@@ -6,25 +6,31 @@ import { motion, useInView, AnimatePresence } from 'framer-motion'
 import {
   ArrowRight, Zap, Globe, LayoutDashboard, ShoppingBag, TrendingUp, Palette,
   Star, CheckCircle, Users, Trophy, Code2, Package, UserCheck, BadgeDollarSign,
-  Kanban, ShoppingCart, BarChart3, Settings, ChevronRight, Quote, Play,
+  Kanban, ShoppingCart, BarChart3, Settings, Quote, Play, X,
   Factory, Heart, Truck, GraduationCap, Rocket, Building2, Store,
-  Search, FileText, Headphones, Shield, Clock, Sparkles, ArrowUpRight,
+  Search, FileText, Shield, Clock, Sparkles, ArrowUpRight,
+  ChevronLeft, ChevronRight,
 } from 'lucide-react'
 import SiteLayout from '@/components/SiteLayout'
 import { siteConfig, solutions, products, technologies, processSteps, industries } from '@/config/site'
 
 /* ─── helpers ─────────────────────────────────────────────── */
-function FadeIn({ children, delay = 0, className = '', direction = 'up' }: { children: React.ReactNode; delay?: number; className?: string; direction?: 'up' | 'left' | 'right' | 'none' }) {
+function FadeIn({ children, delay = 0, className = '', direction = 'up' }: {
+  children: React.ReactNode; delay?: number; className?: string; direction?: 'up' | 'left' | 'right' | 'none'
+}) {
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, amount: 0.15 })
   const variants = {
-    up:    { hidden: { opacity: 0, y: 40 },    visible: { opacity: 1, y: 0 } },
-    left:  { hidden: { opacity: 0, x: -40 },   visible: { opacity: 1, x: 0 } },
-    right: { hidden: { opacity: 0, x: 40 },    visible: { opacity: 1, x: 0 } },
-    none:  { hidden: { opacity: 0 },            visible: { opacity: 1 } },
+    up:    { hidden: { opacity: 0, y: 40 },  visible: { opacity: 1, y: 0 } },
+    left:  { hidden: { opacity: 0, x: -40 }, visible: { opacity: 1, x: 0 } },
+    right: { hidden: { opacity: 0, x: 40 },  visible: { opacity: 1, x: 0 } },
+    none:  { hidden: { opacity: 0 },          visible: { opacity: 1 } },
   }[direction]
   return (
-    <motion.div ref={ref} variants={variants} initial="hidden" animate={inView ? 'visible' : 'hidden'} transition={{ duration: 0.6, delay, ease: [0.25, 0.1, 0.25, 1] }} className={className}>
+    <motion.div ref={ref} variants={variants} initial="hidden"
+      animate={inView ? 'visible' : 'hidden'}
+      transition={{ duration: 0.6, delay, ease: [0.25, 0.1, 0.25, 1] }}
+      className={className}>
       {children}
     </motion.div>
   )
@@ -52,25 +58,70 @@ const iconMap: Record<string, React.ElementType> = {
   Globe, LayoutDashboard, ShoppingBag, TrendingUp, Palette, Zap,
   Users, Package, UserCheck, BadgeDollarSign, Kanban, ShoppingCart, BarChart3, Settings,
   Factory, Heart, Truck, GraduationCap, Rocket, Building2, Store, Search, FileText,
-  Code2, CheckCircle, Headphones, Trophy, Star, ArrowRight,
+  Code2, CheckCircle, Trophy, Star, ArrowRight,
 }
-
 function Icon({ name, className }: { name: string; className?: string }) {
   const C = iconMap[name] ?? Zap
   return <C className={className} />
 }
 
+/* ─── Video Modal ────────────────────────────────────────────── */
+const DEMO_VIDEO_ID = 'mxBgN6FXmUI' // Replace with your actual YouTube demo video ID
+
+function VideoModal({ onClose }: { onClose: () => void }) {
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [onClose])
+
+  return (
+    <AnimatePresence>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="fixed inset-0 z-[200] bg-black/85 backdrop-blur-md flex items-center justify-center p-4"
+        onClick={onClose}
+      >
+        <motion.div
+          initial={{ scale: 0.85, opacity: 0, y: 30 }}
+          animate={{ scale: 1, opacity: 1, y: 0 }}
+          exit={{ scale: 0.85, opacity: 0, y: 30 }}
+          transition={{ type: 'spring', damping: 20, stiffness: 200 }}
+          className="relative w-full max-w-5xl rounded-2xl overflow-hidden shadow-2xl"
+          style={{ aspectRatio: '16/9' }}
+          onClick={e => e.stopPropagation()}
+        >
+          <iframe
+            src={`https://www.youtube.com/embed/${DEMO_VIDEO_ID}?autoplay=1&rel=0&modestbranding=1`}
+            className="w-full h-full"
+            allow="autoplay; fullscreen; picture-in-picture"
+            allowFullScreen
+          />
+          <button
+            onClick={onClose}
+            className="absolute top-3 right-3 w-9 h-9 rounded-full bg-black/50 hover:bg-black/80 text-white flex items-center justify-center transition-colors z-10"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
+  )
+}
+
 /* ─── Section: Hero ─────────────────────────────────────────── */
 function HeroSection() {
+  const [videoOpen, setVideoOpen] = useState(false)
+
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden bg-white">
-      {/* Grid bg */}
       <div className="absolute inset-0 bg-grid opacity-40" />
-
-      {/* Gradient orbs */}
       <div className="absolute top-20 -left-32 w-[600px] h-[600px] rounded-full bg-violet-500/10 blur-3xl" />
       <div className="absolute bottom-0 -right-32 w-[500px] h-[500px] rounded-full bg-purple-500/10 blur-3xl" />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] rounded-full bg-violet-600/5 blur-3xl" />
+
+      {videoOpen && <VideoModal onClose={() => setVideoOpen(false)} />}
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-20">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
@@ -83,8 +134,7 @@ function HeroSection() {
             </motion.div>
 
             <motion.h1
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
               className="text-5xl sm:text-6xl lg:text-7xl font-bold leading-[1.05] tracking-tight mb-6 text-slate-900"
             >
@@ -94,8 +144,7 @@ function HeroSection() {
             </motion.h1>
 
             <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
               className="text-xl text-slate-500 leading-relaxed mb-8 max-w-xl"
             >
@@ -103,23 +152,28 @@ function HeroSection() {
             </motion.p>
 
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.3 }}
               className="flex flex-wrap items-center gap-4 mb-10"
             >
               <Link href={siteConfig.cta.primary.href} className="btn-primary text-base px-7 py-3.5">
                 {siteConfig.cta.primary.label} <ArrowRight className="w-5 h-5" />
               </Link>
-              <Link href={siteConfig.cta.secondary.href} className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl border border-slate-200 text-slate-700 font-semibold hover:border-violet-400 hover:text-violet-600 transition-all text-base">
-                {siteConfig.cta.secondary.label} <ArrowUpRight className="w-4 h-4" />
-              </Link>
+
+              {/* Watch Demo Button */}
+              <button
+                onClick={() => setVideoOpen(true)}
+                className="inline-flex items-center gap-3 px-6 py-3.5 rounded-xl border border-slate-200 text-slate-700 font-semibold hover:border-violet-400 hover:text-violet-600 transition-all text-base group"
+              >
+                <span className="w-9 h-9 rounded-full bg-violet-600 flex items-center justify-center flex-shrink-0 group-hover:bg-violet-700 transition-colors animate-pulse-glow">
+                  <Play className="w-4 h-4 text-white fill-white ml-0.5" />
+                </span>
+                Watch Demo
+              </button>
             </motion.div>
 
-            {/* Trust indicators */}
             <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.5 }}
               className="flex flex-wrap items-center gap-6"
             >
@@ -129,8 +183,7 @@ function HeroSection() {
                 { icon: Clock, label: 'On-time delivery' },
               ].map(({ icon: I, label }) => (
                 <div key={label} className="flex items-center gap-2 text-sm text-slate-500">
-                  <I className="w-4 h-4 text-emerald-500" />
-                  {label}
+                  <I className="w-4 h-4 text-emerald-500" /> {label}
                 </div>
               ))}
             </motion.div>
@@ -143,15 +196,16 @@ function HeroSection() {
             transition={{ duration: 0.8, delay: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
             className="relative hidden lg:block"
           >
-            {/* Main dashboard card */}
             <div className="relative rounded-2xl border border-slate-200 bg-white shadow-2xl shadow-violet-500/10 overflow-hidden">
-              {/* Title bar */}
               <div className="flex items-center gap-2 px-4 py-3 border-b border-slate-100 bg-slate-50">
-                <div className="flex gap-1.5"><div className="w-3 h-3 rounded-full bg-red-400" /><div className="w-3 h-3 rounded-full bg-amber-400" /><div className="w-3 h-3 rounded-full bg-emerald-400" /></div>
+                <div className="flex gap-1.5">
+                  <div className="w-3 h-3 rounded-full bg-red-400" />
+                  <div className="w-3 h-3 rounded-full bg-amber-400" />
+                  <div className="w-3 h-3 rounded-full bg-emerald-400" />
+                </div>
                 <div className="flex-1 mx-3 h-5 rounded-md bg-slate-200 text-[10px] text-slate-400 flex items-center px-2">suprimohub.in/dashboard</div>
               </div>
               <div className="p-5 space-y-4">
-                {/* Stats row */}
                 <div className="grid grid-cols-3 gap-3">
                   {[
                     { label: 'Revenue', val: '₹2.4L', change: '+18%', color: 'text-emerald-500' },
@@ -165,20 +219,21 @@ function HeroSection() {
                     </div>
                   ))}
                 </div>
-                {/* Chart bars */}
                 <div className="rounded-xl bg-slate-50 border border-slate-100 p-4">
                   <p className="text-xs font-semibold text-slate-600 mb-3">Monthly Growth</p>
                   <div className="flex items-end gap-1.5 h-20">
                     {[40, 65, 45, 80, 60, 90, 75, 95, 70, 85, 78, 100].map((h, i) => (
-                      <motion.div key={i} initial={{ height: 0 }} animate={{ height: `${h}%` }} transition={{ delay: 0.5 + i * 0.05, duration: 0.5 }}
-                        className={`flex-1 rounded-t-sm ${i === 11 ? 'bg-gradient-to-t from-violet-600 to-purple-500' : 'bg-slate-200'}`} />
+                      <motion.div key={i}
+                        initial={{ height: 0 }} animate={{ height: `${h}%` }}
+                        transition={{ delay: 0.5 + i * 0.05, duration: 0.5 }}
+                        className={`flex-1 rounded-t-sm ${i === 11 ? 'bg-gradient-to-t from-violet-600 to-purple-500' : 'bg-slate-200'}`}
+                      />
                     ))}
                   </div>
                   <div className="flex justify-between mt-2">
                     {['Jan', 'Apr', 'Jul', 'Oct', 'Dec'].map(m => <span key={m} className="text-[9px] text-slate-400">{m}</span>)}
                   </div>
                 </div>
-                {/* Recent activity */}
                 <div className="space-y-2">
                   {[
                     { name: 'New client onboarded', time: '2m ago', status: 'success' },
@@ -197,7 +252,7 @@ function HeroSection() {
               </div>
             </div>
 
-            {/* Floating badge cards */}
+            {/* Floating badges */}
             <motion.div animate={{ y: [-8, 8, -8] }} transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
               className="absolute -top-6 -right-6 bg-white rounded-2xl border border-slate-200 shadow-xl p-3 flex items-center gap-2">
               <div className="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center"><CheckCircle className="w-4 h-4 text-emerald-500" /></div>
@@ -222,13 +277,37 @@ function HeroSection() {
 
       {/* Scroll indicator */}
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.5 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
+        className="absolute bottom-8 left-1/2 -translate-x-1/2">
         <motion.div animate={{ y: [0, 6, 0] }} transition={{ duration: 1.5, repeat: Infinity }}
           className="w-5 h-8 rounded-full border-2 border-slate-300 flex items-start justify-center pt-1.5">
           <div className="w-1 h-1.5 rounded-full bg-slate-400" />
         </motion.div>
       </motion.div>
     </section>
+  )
+}
+
+/* ─── Section: Marquee Strip ─────────────────────────────────── */
+const marqueeItems = [
+  '🏭 Manufacturing', '🛒 Retail', '🏥 Healthcare', '🚚 Logistics',
+  '🎓 Education', '🏠 Real Estate', '🍽️ Restaurants', '🚀 Startups',
+  '🏪 Wholesale', '🌐 Ecommerce', '💰 Finance', '⚡ Energy',
+]
+
+function MarqueeStrip() {
+  const doubled = [...marqueeItems, ...marqueeItems]
+  return (
+    <div className="py-5 bg-[#1e0a4a] border-y border-violet-900/40 overflow-hidden">
+      <div className="flex overflow-hidden">
+        <div className="flex animate-marquee whitespace-nowrap gap-0 flex-shrink-0">
+          {doubled.map((item, i) => (
+            <span key={i} className="inline-flex items-center gap-2 text-sm font-semibold text-violet-300 px-8 border-r border-violet-800/60 last:border-0">
+              {item}
+            </span>
+          ))}
+        </div>
+      </div>
+    </div>
   )
 }
 
@@ -299,40 +378,102 @@ function SolutionsSection() {
   )
 }
 
-/* ─── Section: Products ─────────────────────────────────────── */
+/* ─── Section: Products Carousel ────────────────────────────── */
 function ProductsSection() {
+  const scrollRef = useRef<HTMLDivElement>(null)
+  const [canLeft, setCanLeft] = useState(false)
+  const [canRight, setCanRight] = useState(true)
+
+  const scroll = (dir: 'left' | 'right') => {
+    if (!scrollRef.current) return
+    const amount = 320
+    scrollRef.current.scrollBy({ left: dir === 'left' ? -amount : amount, behavior: 'smooth' })
+  }
+
+  const onScroll = () => {
+    if (!scrollRef.current) return
+    const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current
+    setCanLeft(scrollLeft > 10)
+    setCanRight(scrollLeft < scrollWidth - clientWidth - 10)
+  }
+
+  // Auto-advance every 3 s
+  useEffect(() => {
+    const timer = setInterval(() => {
+      if (!scrollRef.current) return
+      const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current
+      if (scrollLeft >= scrollWidth - clientWidth - 10) {
+        scrollRef.current.scrollTo({ left: 0, behavior: 'smooth' })
+      } else {
+        scrollRef.current.scrollBy({ left: 280, behavior: 'smooth' })
+      }
+    }, 3000)
+    return () => clearInterval(timer)
+  }, [])
+
   return (
-    <section className="py-24 bg-surface">
+    <section className="py-24 bg-surface overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <FadeIn className="text-center mb-16">
-          <span className="badge bg-purple-100 text-purple-600 mb-4">SaaS Products</span>
-          <h2 className="text-4xl lg:text-5xl font-bold text-slate-900 mb-5">
-            Powerful Software <span className="gradient-text">Built for Scale</span>
-          </h2>
-          <p className="text-lg text-slate-500 max-w-2xl mx-auto">
-            Our suite of business products helps you manage every aspect of your operations from one unified platform.
-          </p>
+        <FadeIn className="flex items-end justify-between mb-12 flex-wrap gap-4">
+          <div>
+            <span className="badge bg-purple-100 text-purple-600 mb-3">SaaS Products</span>
+            <h2 className="text-4xl lg:text-5xl font-bold text-slate-900">
+              Powerful Software <span className="gradient-text">Built for Scale</span>
+            </h2>
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => scroll('left')}
+              disabled={!canLeft}
+              className={`w-10 h-10 rounded-full border flex items-center justify-center transition-all ${
+                canLeft ? 'border-violet-600 text-violet-600 hover:bg-violet-50' : 'border-slate-200 text-slate-300 cursor-not-allowed'
+              }`}
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </button>
+            <button
+              onClick={() => scroll('right')}
+              disabled={!canRight}
+              className={`w-10 h-10 rounded-full border flex items-center justify-center transition-all ${
+                canRight ? 'border-violet-600 text-violet-600 hover:bg-violet-50' : 'border-slate-200 text-slate-300 cursor-not-allowed'
+              }`}
+            >
+              <ChevronRight className="w-5 h-5" />
+            </button>
+          </div>
         </FadeIn>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div
+          ref={scrollRef}
+          onScroll={onScroll}
+          className="flex gap-4 overflow-x-auto scrollbar-hide pb-4 -mx-4 px-4 snap-x snap-mandatory"
+          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+        >
           {products.map((p, i) => (
-            <FadeIn key={p.id} delay={i * 0.05}>
-              <div className="group relative rounded-2xl border border-slate-200 bg-white p-6 hover:border-violet-300 hover:shadow-xl hover:shadow-violet-500/5 transition-all duration-300 hover:-translate-y-1 cursor-pointer">
-                {p.badge && (
-                  <span className={`absolute top-4 right-4 text-[10px] font-bold px-2 py-0.5 rounded-full ${p.badge === 'Popular' ? 'bg-violet-500 text-white' : 'bg-emerald-500 text-white'}`}>{p.badge}</span>
-                )}
-                <div className={`w-11 h-11 rounded-xl bg-gradient-to-br ${p.color} flex items-center justify-center mb-4 shadow-md group-hover:scale-110 transition-transform`}>
-                  <Icon name={p.icon} className="w-5 h-5 text-white" />
-                </div>
-                <h3 className="font-bold text-slate-800 mb-1 group-hover:text-violet-600 transition-colors">{p.title}</h3>
-                <p className="text-[11px] text-slate-400 mb-2 font-medium">{p.subtitle}</p>
-                <p className="text-xs text-slate-500 leading-relaxed">{p.description}</p>
+            <motion.div
+              key={p.id}
+              initial={{ opacity: 0, x: 40 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.05 }}
+              className="group relative flex-shrink-0 w-64 snap-start rounded-2xl border border-slate-200 bg-white p-6 hover:border-violet-300 hover:shadow-xl hover:shadow-violet-500/5 transition-all duration-300 hover:-translate-y-1 cursor-pointer"
+            >
+              {p.badge && (
+                <span className={`absolute top-4 right-4 text-[10px] font-bold px-2 py-0.5 rounded-full ${p.badge === 'Popular' ? 'bg-violet-500 text-white' : 'bg-emerald-500 text-white'}`}>
+                  {p.badge}
+                </span>
+              )}
+              <div className={`w-11 h-11 rounded-xl bg-gradient-to-br ${p.color} flex items-center justify-center mb-4 shadow-md group-hover:scale-110 transition-transform`}>
+                <Icon name={p.icon} className="w-5 h-5 text-white" />
               </div>
-            </FadeIn>
+              <h3 className="font-bold text-slate-800 mb-1 group-hover:text-violet-600 transition-colors">{p.title}</h3>
+              <p className="text-[11px] text-slate-400 mb-2 font-medium">{p.subtitle}</p>
+              <p className="text-xs text-slate-500 leading-relaxed">{p.description}</p>
+            </motion.div>
           ))}
         </div>
 
-        <FadeIn className="text-center mt-10">
+        <FadeIn className="text-center mt-8">
           <Link href="/products" className="inline-flex items-center gap-2 text-violet-600 font-semibold hover:gap-3 transition-all">
             See all products <ArrowRight className="w-4 h-4" />
           </Link>
@@ -359,7 +500,6 @@ function ProcessSection() {
 
         <div className="relative">
           <div className="hidden lg:block absolute top-10 left-[10%] right-[10%] h-0.5 bg-gradient-to-r from-violet-500 via-purple-500 to-indigo-500 opacity-20" />
-
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {processSteps.slice(0, 4).map((step, i) => (
               <FadeIn key={step.step} delay={i * 0.1}>
@@ -458,65 +598,78 @@ function IndustriesSection() {
   )
 }
 
-/* ─── Section: Testimonials ────────────────────────────────── */
+/* ─── Section: Testimonials Infinite Slider ─────────────────── */
+const allTestimonials = [
+  { id: '1', name: 'Rajesh Agarwal', role: 'CEO', company: 'Agarwal Traders', rating: 5, text: 'SARAL MIS transformed how we manage inventory and billing. What used to take 3 hours now takes 15 minutes. Exceptional work!' },
+  { id: '2', name: 'Priya Sharma', role: 'HR Manager', company: 'TechNova Pvt Ltd', rating: 5, text: 'The HRMS and Payroll system saved our team 20+ hours every month. Delivered on time and works flawlessly.' },
+  { id: '3', name: 'Mohammed Farouk', role: 'Operations Head', company: 'Gulf Logistics', rating: 5, text: 'From CRM to operations dashboard in 6 weeks. Team visibility improved 10x and customer satisfaction jumped.' },
+  { id: '4', name: 'Sunita Kapoor', role: 'Founder', company: 'Kapoor Retail Chain', rating: 5, text: 'The POS and inventory system synced perfectly across our 5 stores. Best investment we made this year.' },
+  { id: '5', name: 'Vikram Singh', role: 'Director', company: 'Singh Constructions', rating: 5, text: 'Project tracking and billing in one dashboard — our team finally stopped chasing Excel sheets. Love it.' },
+  { id: '6', name: 'Anita Patel', role: 'CFO', company: 'Patel Industries', rating: 5, text: 'GST-ready payroll with automatic calculations. We cut our accounting overhead by 40%. Highly recommended.' },
+  { id: '7', name: 'Deepak Nair', role: 'MD', company: 'Kerala Exports', rating: 5, text: 'Multi-location inventory management made simple. SARAL MIS understood our business from day one.' },
+  { id: '8', name: 'Ritu Gupta', role: 'Owner', company: 'Gupta Restaurant Group', rating: 5, text: 'The POS system is fast, clean, and our staff trained in a day. Sales reports are crystal clear.' },
+]
+
+function TestimonialCard({ t }: { t: typeof allTestimonials[0] }) {
+  return (
+    <div className="flex-shrink-0 w-80 mx-3 rounded-2xl border border-slate-200 bg-white p-6 relative">
+      <Quote className="w-7 h-7 text-violet-200 absolute top-5 right-5" />
+      <div className="flex gap-1 mb-3">
+        {Array.from({ length: t.rating }).map((_, j) => <Star key={j} className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />)}
+      </div>
+      <p className="text-slate-600 text-sm leading-relaxed mb-5 italic">"{t.text}"</p>
+      <div className="flex items-center gap-3 pt-4 border-t border-slate-100">
+        <div className="w-9 h-9 rounded-full gradient-bg flex items-center justify-center text-white font-bold text-xs flex-shrink-0">
+          {t.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
+        </div>
+        <div>
+          <p className="font-semibold text-slate-800 text-sm">{t.name}</p>
+          <p className="text-xs text-slate-400">{t.role}, {t.company}</p>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function TestimonialsSection() {
-  const [testimonials, setTestimonials] = useState<any[]>([])
-  useEffect(() => {
-    fetch('/api/testimonials').then(r => r.json()).then(d => Array.isArray(d) && setTestimonials(d.slice(0, 3)))
-  }, [])
-
-  const staticTestimonials = [
-    { id: '1', name: 'Rajesh Agarwal', role: 'CEO', company: 'Agarwal Traders', rating: 5, text: 'SARAL MIS transformed how we manage inventory and billing. Everything is automated now — what used to take 3 hours takes 15 minutes. Exceptional work!' },
-    { id: '2', name: 'Priya Sharma', role: 'HR Manager', company: 'TechNova Pvt Ltd', rating: 5, text: 'The HRMS and Payroll system saved our team 20+ hours every month. Delivered on time and works flawlessly. True professionals.' },
-    { id: '3', name: 'Mohammed Farouk', role: 'Operations Head', company: 'Gulf Logistics', rating: 5, text: 'From CRM to operations dashboard in 6 weeks. Our team visibility improved 10x and customer satisfaction jumped after implementation.' },
-  ]
-
-  const displayList = testimonials.length > 0 ? testimonials : staticTestimonials
+  const row1 = [...allTestimonials, ...allTestimonials]
+  const row2 = [...allTestimonials.slice(4), ...allTestimonials.slice(0, 4), ...allTestimonials.slice(4), ...allTestimonials.slice(0, 4)]
 
   return (
-    <section className="py-24 bg-surface">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <FadeIn className="text-center mb-16">
+    <section className="py-24 bg-surface overflow-hidden">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12">
+        <FadeIn className="text-center">
           <span className="badge bg-rose-100 text-rose-600 mb-4">Client Stories</span>
-          <h2 className="text-4xl lg:text-5xl font-bold text-slate-900 mb-5">
+          <h2 className="text-4xl lg:text-5xl font-bold text-slate-900 mb-4">
             Trusted by <span className="gradient-text">Growing Businesses</span>
           </h2>
-          <div className="flex items-center justify-center gap-1 mb-3">
+          <div className="flex items-center justify-center gap-1">
             {[1,2,3,4,5].map(i => <Star key={i} className="w-5 h-5 fill-amber-400 text-amber-400" />)}
             <span className="ml-2 font-bold text-slate-700">5.0</span>
-            <span className="text-slate-400 text-sm ml-1">average rating</span>
+            <span className="text-slate-400 text-sm ml-1">· 80+ happy clients</span>
           </div>
         </FadeIn>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {displayList.map((t, i) => (
-            <FadeIn key={t.id} delay={i * 0.1}>
-              <div className="relative h-full rounded-2xl border border-slate-200 bg-white p-7 hover:shadow-xl hover:shadow-violet-500/5 transition-all duration-300 hover:-translate-y-1">
-                <Quote className="w-8 h-8 text-violet-200 absolute top-6 right-6" />
-                <div className="flex gap-1 mb-4">
-                  {Array.from({ length: t.rating }).map((_, j) => <Star key={j} className="w-4 h-4 fill-amber-400 text-amber-400" />)}
-                </div>
-                <p className="text-slate-600 leading-relaxed mb-6 text-sm italic">"{t.text}"</p>
-                <div className="flex items-center gap-3 pt-5 border-t border-slate-100">
-                  <div className="w-10 h-10 rounded-full gradient-bg flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
-                    {t.name.split(' ').map((n: string) => n[0]).join('').slice(0, 2)}
-                  </div>
-                  <div>
-                    <p className="font-semibold text-slate-800 text-sm">{t.name}</p>
-                    <p className="text-xs text-slate-400">{t.role}{t.company ? `, ${t.company}` : ''}</p>
-                  </div>
-                </div>
-              </div>
-            </FadeIn>
-          ))}
-        </div>
-
-        <FadeIn className="text-center mt-10">
-          <Link href="/testimonials" className="inline-flex items-center gap-2 text-violet-600 font-semibold hover:gap-3 transition-all">
-            Read all stories <ArrowRight className="w-4 h-4" />
-          </Link>
-        </FadeIn>
       </div>
+
+      {/* Row 1 — scrolls left */}
+      <div className="flex overflow-hidden mb-4">
+        <div className="flex animate-marquee-slow py-1">
+          {row1.map((t, i) => <TestimonialCard key={`r1-${i}`} t={t} />)}
+        </div>
+      </div>
+
+      {/* Row 2 — scrolls right */}
+      <div className="flex overflow-hidden">
+        <div className="flex animate-marquee-reverse py-1">
+          {row2.map((t, i) => <TestimonialCard key={`r2-${i}`} t={t} />)}
+        </div>
+      </div>
+
+      <FadeIn className="text-center mt-10">
+        <Link href="/testimonials" className="inline-flex items-center gap-2 text-violet-600 font-semibold hover:gap-3 transition-all">
+          Read all stories <ArrowRight className="w-4 h-4" />
+        </Link>
+      </FadeIn>
     </section>
   )
 }
@@ -561,6 +714,7 @@ export default function HomePage() {
   return (
     <SiteLayout>
       <HeroSection />
+      <MarqueeStrip />
       <StatsSection />
       <SolutionsSection />
       <ProductsSection />

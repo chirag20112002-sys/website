@@ -12,13 +12,13 @@ export const viewport: Viewport = {
 }
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://website-q9ym-lxhami1lg-chirag12.vercel.app'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://suprimohub.in'),
   title: {
-    default: 'AirX Solution – Premium Web Development & Digital Agency',
+    default: 'AirX Solution — Premium Web Development & Business Software',
     template: '%s | AirX Solution',
   },
-  description: 'AirX Solution delivers premium web development, Shopify store development, custom admin panels, e-commerce solutions, and business automation. Transform your digital presence today.',
-  keywords: ['web development', 'Shopify development', 'e-commerce', 'admin panel', 'UI/UX design', 'business automation', 'AirX Solution'],
+  description: 'We build beautiful digital experiences and powerful business software. Custom websites, ERP, CRM, HRMS, Shopify stores, and AI automation for modern businesses.',
+  keywords: ['web development', 'business software', 'CRM', 'ERP', 'HRMS', 'Shopify', 'digital marketing', 'AI automation', 'AirX Solution'],
   authors: [{ name: 'AirX Solution' }],
   creator: 'AirX Solution',
   openGraph: {

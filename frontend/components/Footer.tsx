@@ -1,164 +1,164 @@
 'use client'
 
 import Link from 'next/link'
-import { motion } from 'framer-motion'
-import { Zap, Mail, Phone, MapPin, Twitter, Linkedin, Github, Instagram, Facebook, ArrowRight, Heart } from 'lucide-react'
+import { Zap, Mail, Phone, MapPin, Twitter, Linkedin, Github, Instagram, ArrowRight, Heart } from 'lucide-react'
+import { siteConfig } from '@/config/site'
 
-const services = [
-  { label: 'Website Development', href: '/services#web' },
-  { label: 'Shopify Development', href: '/services#shopify' },
-  { label: 'E-Commerce Solutions', href: '/services#ecommerce' },
-  { label: 'Admin Panel', href: '/services#admin' },
-  { label: 'Web Applications', href: '/services#webapp' },
-  { label: 'UI/UX Design', href: '/services#uiux' },
-]
-
-const company = [
-  { label: 'About Us', href: '/about' },
-  { label: 'Portfolio', href: '/portfolio' },
-  { label: 'Blog', href: '/blog' },
-  { label: 'Testimonials', href: '/testimonials' },
-  { label: 'FAQ', href: '/faq' },
-  { label: 'Contact', href: '/contact' },
-]
-
-const legal = [
-  { label: 'Privacy Policy', href: '/privacy-policy' },
-  { label: 'Terms & Conditions', href: '/terms' },
-]
+const footerLinks = {
+  Solutions: [
+    { label: 'Digital Presence', href: '/solutions#digital-presence' },
+    { label: 'Business Software', href: '/solutions#business-software' },
+    { label: 'Ecommerce', href: '/solutions#ecommerce' },
+    { label: 'Marketing', href: '/solutions#marketing' },
+    { label: 'Design', href: '/solutions#design' },
+    { label: 'AI & Automation', href: '/solutions#automation' },
+  ],
+  Products: [
+    { label: 'CRM', href: '/products#crm' },
+    { label: 'Inventory', href: '/products#inventory' },
+    { label: 'HRMS', href: '/products#hrms' },
+    { label: 'Payroll', href: '/products#payroll' },
+    { label: 'POS', href: '/products#pos' },
+    { label: 'Analytics', href: '/products#analytics' },
+  ],
+  Company: [
+    { label: 'About Us', href: '/about' },
+    { label: 'Portfolio', href: '/portfolio' },
+    { label: 'Industries', href: '/industries' },
+    { label: 'Blog', href: '/blog' },
+    { label: 'Testimonials', href: '/testimonials' },
+    { label: 'FAQ', href: '/faq' },
+  ],
+  Resources: [
+    { label: 'Pricing', href: '/pricing' },
+    { label: 'Process', href: '/process' },
+    { label: 'Contact', href: '/contact' },
+    { label: 'Privacy Policy', href: '/privacy-policy' },
+    { label: 'Terms of Service', href: '/terms' },
+  ],
+}
 
 const socials = [
-  { icon: Twitter, href: '#', label: 'Twitter' },
-  { icon: Linkedin, href: '#', label: 'LinkedIn' },
-  { icon: Github, href: '#', label: 'GitHub' },
-  { icon: Instagram, href: '#', label: 'Instagram' },
-  { icon: Facebook, href: '#', label: 'Facebook' },
+  { icon: Twitter, href: siteConfig.social.twitter, label: 'Twitter' },
+  { icon: Linkedin, href: siteConfig.social.linkedin, label: 'LinkedIn' },
+  { icon: Github, href: siteConfig.social.github, label: 'GitHub' },
+  { icon: Instagram, href: siteConfig.social.instagram, label: 'Instagram' },
 ]
 
 export default function Footer() {
   return (
-    <footer className="bg-slate-900 dark:bg-[#060c18] text-slate-300 relative overflow-hidden">
-      {/* Background glow */}
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-indigo-500/5 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-cyan-500/5 rounded-full blur-3xl pointer-events-none" />
+    <footer className="relative bg-slate-950 dark:bg-[#020408] border-t border-slate-800/50 overflow-hidden">
+      {/* Background glows */}
+      <div className="absolute -top-40 left-1/4 w-96 h-96 bg-indigo-600/5 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-violet-600/5 rounded-full blur-3xl pointer-events-none" />
 
-      {/* Newsletter CTA */}
-      <div className="border-b border-slate-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="glass rounded-2xl p-8 md:p-10 flex flex-col md:flex-row items-center justify-between gap-6">
-            <div>
-              <h3 className="text-2xl font-bold text-white font-display mb-2">Stay in the Loop</h3>
-              <p className="text-slate-400">Get the latest news, tips, and updates from AirX Solution.</p>
+      {/* Newsletter Banner */}
+      <div className="border-b border-slate-800/50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+          <div className="relative rounded-2xl overflow-hidden">
+            <div className="absolute inset-0 gradient-bg opacity-10" />
+            <div className="absolute inset-0 bg-grid opacity-20" />
+            <div className="relative flex flex-col md:flex-row items-center justify-between gap-6 p-8 border border-indigo-500/20 rounded-2xl">
+              <div>
+                <h3 className="text-xl font-bold text-white mb-1">Stay Ahead of the Curve</h3>
+                <p className="text-slate-400 text-sm">Get insights on tech, design, and business automation. No spam.</p>
+              </div>
+              <form className="flex w-full md:w-auto gap-3" onSubmit={e => e.preventDefault()}>
+                <input
+                  type="email"
+                  placeholder="your@email.com"
+                  className="flex-1 md:w-60 px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white placeholder:text-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                />
+                <button type="submit" className="btn-primary text-sm py-2.5 px-5 whitespace-nowrap">
+                  Subscribe <ArrowRight className="w-4 h-4" />
+                </button>
+              </form>
             </div>
-            <form className="flex w-full md:w-auto gap-3">
-              <input
-                type="email"
-                placeholder="Enter your email"
-                className="flex-1 md:w-64 px-4 py-3 rounded-xl bg-slate-800 border border-slate-700 text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              />
-              <button type="submit" className="btn-primary whitespace-nowrap">
-                Subscribe <ArrowRight className="w-4 h-4" />
-              </button>
-            </form>
           </div>
         </div>
       </div>
 
-      {/* Main Footer */}
+      {/* Main Footer Grid */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10">
-          {/* Brand */}
+        <div className="grid grid-cols-1 lg:grid-cols-6 gap-12">
+          {/* Brand Column */}
           <div className="lg:col-span-2">
-            <Link href="/" className="flex items-center gap-2.5 mb-5">
-              <div className="w-9 h-9 rounded-xl gradient-bg flex items-center justify-center">
-                <Zap className="w-5 h-5 text-white" />
+            <Link href="/" className="flex items-center gap-2.5 mb-5 group">
+              <div className="w-8 h-8 rounded-lg gradient-bg flex items-center justify-center shadow-lg shadow-indigo-500/30">
+                <Zap className="w-4 h-4 text-white" />
               </div>
-              <span className="text-xl font-bold font-display text-white">AirX Solution</span>
+              <span className="font-bold text-[17px] text-white">{siteConfig.name}</span>
             </Link>
-            <p className="text-slate-400 leading-relaxed mb-6 max-w-xs">
-              We build premium digital experiences — from high-performance websites and Shopify stores to custom admin panels and business automation tools.
+            <p className="text-slate-400 text-sm leading-relaxed mb-6 max-w-xs">
+              We build beautiful digital experiences and powerful business software that helps companies grow, automate, and scale.
             </p>
+            {/* Contact */}
             <div className="space-y-3">
-              <a href="mailto:hello@airxsolution.com" className="flex items-center gap-3 text-slate-400 hover:text-indigo-400 transition-colors text-sm">
-                <Mail className="w-4 h-4 text-indigo-500 flex-shrink-0" />
-                hello@airxsolution.com
+              <a href={`mailto:${siteConfig.email}`} className="flex items-center gap-3 text-slate-400 hover:text-indigo-400 transition-colors text-sm group">
+                <div className="w-7 h-7 rounded-lg bg-indigo-500/10 flex items-center justify-center flex-shrink-0 group-hover:bg-indigo-500/20 transition-colors">
+                  <Mail className="w-3.5 h-3.5 text-indigo-400" />
+                </div>
+                {siteConfig.email}
               </a>
-              <a href="tel:+1234567890" className="flex items-center gap-3 text-slate-400 hover:text-indigo-400 transition-colors text-sm">
-                <Phone className="w-4 h-4 text-indigo-500 flex-shrink-0" />
-                +1 (234) 567-8900
+              <a href={`tel:${siteConfig.phone}`} className="flex items-center gap-3 text-slate-400 hover:text-indigo-400 transition-colors text-sm group">
+                <div className="w-7 h-7 rounded-lg bg-indigo-500/10 flex items-center justify-center flex-shrink-0 group-hover:bg-indigo-500/20 transition-colors">
+                  <Phone className="w-3.5 h-3.5 text-indigo-400" />
+                </div>
+                {siteConfig.phone}
               </a>
-              <div className="flex items-start gap-3 text-slate-400 text-sm">
-                <MapPin className="w-4 h-4 text-indigo-500 flex-shrink-0 mt-0.5" />
-                123 Digital Avenue, Tech City, TC 10001
+              <div className="flex items-center gap-3 text-slate-400 text-sm">
+                <div className="w-7 h-7 rounded-lg bg-indigo-500/10 flex items-center justify-center flex-shrink-0">
+                  <MapPin className="w-3.5 h-3.5 text-indigo-400" />
+                </div>
+                {siteConfig.address}
               </div>
             </div>
-          </div>
 
-          {/* Services */}
-          <div>
-            <h4 className="font-semibold text-white mb-5 font-display">Services</h4>
-            <ul className="space-y-3">
-              {services.map(s => (
-                <li key={s.href}>
-                  <Link href={s.href} className="text-slate-400 hover:text-indigo-400 transition-colors text-sm flex items-center gap-2 group">
-                    <ArrowRight className="w-3 h-3 opacity-0 group-hover:opacity-100 -ml-2 group-hover:ml-0 transition-all" />
-                    {s.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Company */}
-          <div>
-            <h4 className="font-semibold text-white mb-5 font-display">Company</h4>
-            <ul className="space-y-3">
-              {company.map(c => (
-                <li key={c.href}>
-                  <Link href={c.href} className="text-slate-400 hover:text-indigo-400 transition-colors text-sm flex items-center gap-2 group">
-                    <ArrowRight className="w-3 h-3 opacity-0 group-hover:opacity-100 -ml-2 group-hover:ml-0 transition-all" />
-                    {c.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Social & Legal */}
-          <div>
-            <h4 className="font-semibold text-white mb-5 font-display">Follow Us</h4>
-            <div className="flex flex-wrap gap-3 mb-8">
-              {socials.map(s => (
+            {/* Social */}
+            <div className="flex gap-2.5 mt-6">
+              {socials.map((s) => (
                 <a
                   key={s.label}
                   href={s.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   aria-label={s.label}
-                  className="w-10 h-10 rounded-xl bg-slate-800 hover:bg-indigo-600 flex items-center justify-center text-slate-400 hover:text-white transition-all duration-200 hover:scale-110"
+                  className="w-9 h-9 rounded-xl bg-slate-800 hover:bg-indigo-600 border border-slate-700 hover:border-indigo-500 flex items-center justify-center text-slate-400 hover:text-white transition-all duration-200 hover:scale-110"
                 >
-                  <s.icon className="w-4.5 h-4.5" size={18} />
+                  <s.icon size={15} />
                 </a>
               ))}
             </div>
-            <h4 className="font-semibold text-white mb-4 font-display">Legal</h4>
-            <ul className="space-y-3">
-              {legal.map(l => (
-                <li key={l.href}>
-                  <Link href={l.href} className="text-slate-400 hover:text-indigo-400 transition-colors text-sm">
-                    {l.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
           </div>
+
+          {/* Link Columns */}
+          {Object.entries(footerLinks).map(([title, links]) => (
+            <div key={title}>
+              <h4 className="font-semibold text-white text-sm mb-5 tracking-wide">{title}</h4>
+              <ul className="space-y-3">
+                {links.map((l) => (
+                  <li key={l.href}>
+                    <Link
+                      href={l.href}
+                      className="text-slate-400 hover:text-indigo-400 transition-colors text-sm flex items-center gap-1.5 group"
+                    >
+                      <span className="w-1 h-1 rounded-full bg-slate-600 group-hover:bg-indigo-500 transition-colors flex-shrink-0" />
+                      {l.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </div>
       </div>
 
       {/* Bottom Bar */}
-      <div className="border-t border-slate-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-slate-500">
-          <p>© {new Date().getFullYear()} AirX Solution. All rights reserved.</p>
+      <div className="border-t border-slate-800/50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500">
+          <p>© {new Date().getFullYear()} {siteConfig.name}. All rights reserved.</p>
           <p className="flex items-center gap-1.5">
-            Built with <Heart className="w-4 h-4 text-red-500 fill-red-500" /> by AirX Solution
+            Built with <Heart className="w-3.5 h-3.5 text-rose-500 fill-rose-500" /> for amazing businesses
           </p>
         </div>
       </div>

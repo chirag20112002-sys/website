@@ -18,8 +18,8 @@ function FadeIn({ children, delay = 0, className = '' }: { children: React.React
 const contactInfo = [
   { icon: Mail, title: 'Email Us', value: 'info@suprimohub.in', desc: 'We reply within 2-4 hours', href: 'mailto:info@suprimohub.in' },
   { icon: Phone, title: 'Call Us', value: '+91 93105 93035', desc: 'Mon–Sat, 10AM – 7PM IST', href: 'tel:+919310593035' },
-  { icon: MessageCircle, title: 'WhatsApp', value: '+91 93105 93035', desc: 'Chat with us instantly', href: 'https://wa.me/919310593035' },
-  { icon: MapPin, title: 'Location', value: 'New Delhi, India', desc: 'Serving clients nationwide', href: '#map' },
+  { icon: MessageCircle, title: 'WhatsApp', value: '+91 93105 93035', desc: 'Chat with us instantly', href: 'https://wa.me/919310593035?text=Hello%20SARAL%20MIS!' },
+  { icon: MapPin, title: 'Location', value: 'New Delhi, India', desc: 'Serving clients pan-India', href: '#map' },
 ]
 
 const services = ['Website Development', 'Shopify Store Development', 'Shopify Customization', 'Admin Panel Development', 'E-Commerce Solutions', 'Web Application', 'UI/UX Design', 'Business Automation', 'Maintenance & Support', 'Other']
@@ -112,17 +112,17 @@ export default function ContactPage() {
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                       <div>
                         <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Full Name *</label>
-                        <input type="text" name="name" value={form.name} onChange={handleChange} placeholder="John Smith" required className="input-field" />
+                        <input type="text" name="name" value={form.name} onChange={handleChange} placeholder="Rajesh Sharma" required className="input-field" />
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Email Address *</label>
-                        <input type="email" name="email" value={form.email} onChange={handleChange} placeholder="john@company.com" required className="input-field" />
+                        <input type="email" name="email" value={form.email} onChange={handleChange} placeholder="you@yourcompany.in" required className="input-field" />
                       </div>
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                       <div>
                         <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Phone Number</label>
-                        <input type="tel" name="phone" value={form.phone} onChange={handleChange} placeholder="+1 234 567 8900" className="input-field" />
+                        <input type="tel" name="phone" value={form.phone} onChange={handleChange} placeholder="+91 98765 43210" className="input-field" />
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Company Name</label>
@@ -141,11 +141,11 @@ export default function ContactPage() {
                         <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Project Budget</label>
                         <select name="budget" value={form.budget} onChange={handleChange} className="input-field">
                           <option value="">Select range</option>
-                          <option value="<1000">Under $1,000</option>
-                          <option value="1000-5000">$1,000 – $5,000</option>
-                          <option value="5000-15000">$5,000 – $15,000</option>
-                          <option value="15000-50000">$15,000 – $50,000</option>
-                          <option value=">50000">$50,000+</option>
+                          <option value="<10000">Under ₹10,000</option>
+                          <option value="10000-50000">₹10,000 – ₹50,000</option>
+                          <option value="50000-150000">₹50,000 – ₹1,50,000</option>
+                          <option value="150000-500000">₹1,50,000 – ₹5,00,000</option>
+                          <option value=">500000">₹5,00,000+</option>
                         </select>
                       </div>
                     </div>
@@ -216,8 +216,8 @@ export default function ContactPage() {
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="text-center">
             <MapPin className="w-12 h-12 text-indigo-500 mx-auto mb-2" />
-            <p className="text-slate-600 dark:text-slate-400 font-medium">123 Digital Avenue, Tech City, TC 10001</p>
-            <a href="https://maps.google.com" target="_blank" rel="noopener noreferrer" className="text-indigo-500 text-sm hover:underline mt-1 inline-flex items-center gap-1">
+            <p className="text-slate-600 font-medium">New Delhi, India</p>
+            <a href="https://maps.google.com/maps?q=New+Delhi,+India" target="_blank" rel="noopener noreferrer" className="text-violet-500 text-sm hover:underline mt-1 inline-flex items-center gap-1">
               Open in Google Maps <ArrowRight className="w-3 h-3" />
             </a>
           </div>

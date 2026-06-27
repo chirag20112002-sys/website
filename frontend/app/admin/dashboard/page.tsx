@@ -30,11 +30,11 @@ const quickLinks = [
 ]
 
 const recentMessages = [
-  { name: 'John Smith', email: 'john@company.com', service: 'Shopify Development', time: '2 hours ago', status: 'new' },
-  { name: 'Sarah Johnson', email: 'sarah@startup.io', service: 'Web Application', time: '5 hours ago', status: 'new' },
-  { name: 'Michael Lee', email: 'michael@corp.com', service: 'Admin Panel', time: '1 day ago', status: 'replied' },
-  { name: 'Emma Davis', email: 'emma@brand.co', service: 'UI/UX Design', time: '2 days ago', status: 'replied' },
-  { name: 'Carlos Torres', email: 'carlos@agency.com', service: 'Website Development', time: '3 days ago', status: 'closed' },
+  { name: 'Rajesh Agarwal', email: 'rajesh@agarwaltraders.in', service: 'ERP Development', time: '2 hours ago', status: 'new' },
+  { name: 'Pooja Mehta', email: 'pooja@techstartup.in', service: 'HRMS & Payroll', time: '5 hours ago', status: 'new' },
+  { name: 'Sunil Verma', email: 'sunil@vermaenterprises.in', service: 'CRM System', time: '1 day ago', status: 'replied' },
+  { name: 'Anita Sharma', email: 'anita@sharmagroup.com', service: 'Inventory Management', time: '2 days ago', status: 'replied' },
+  { name: 'Mohammed Farouk', email: 'farouk@gulflogistics.ae', service: 'Business Software', time: '3 days ago', status: 'closed' },
 ]
 
 export default function AdminDashboardPage() {

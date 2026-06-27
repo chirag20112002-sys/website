@@ -47,7 +47,7 @@ const socials = [
 
 export default function Footer() {
   return (
-    <footer className="relative bg-slate-950 dark:bg-[#020408] border-t border-slate-800/50 overflow-hidden">
+    <footer className="relative bg-[#1e0a4a] border-t border-violet-900/40 overflow-hidden">
       {/* Background glows */}
       <div className="absolute -top-40 left-1/4 w-96 h-96 bg-indigo-600/5 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-violet-600/5 rounded-full blur-3xl pointer-events-none" />
@@ -87,7 +87,10 @@ export default function Footer() {
               <div className="w-8 h-8 rounded-lg gradient-bg flex items-center justify-center shadow-lg shadow-indigo-500/30">
                 <Zap className="w-4 h-4 text-white" />
               </div>
-              <span className="font-bold text-[17px] text-white">{siteConfig.name}</span>
+              <span className="font-bold text-[17px] font-display">
+              <span style={{ color: '#A78BFA' }}>SARAL</span>
+              <span className="text-white"> MIS</span>
+            </span>
             </Link>
             <p className="text-slate-400 text-sm leading-relaxed mb-6 max-w-xs">
               We build beautiful digital experiences and powerful business software that helps companies grow, automate, and scale.
@@ -156,7 +159,7 @@ export default function Footer() {
       {/* Bottom Bar */}
       <div className="border-t border-slate-800/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500">
-          <p>© {new Date().getFullYear()} {siteConfig.name}. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} SARAL MIS. All rights reserved.</p>
           <p className="flex items-center gap-1.5">
             Built with <Heart className="w-3.5 h-3.5 text-rose-500 fill-rose-500" /> for amazing businesses
           </p>

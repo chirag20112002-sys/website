@@ -3,32 +3,34 @@
 // Change values here to update the entire website.
 
 export const siteConfig = {
-  name: 'AirX Solution',
-  shortName: 'AirX',
-  tagline: 'Build. Automate. Scale.',
-  headline: 'We Build Digital Experiences That Drive Business Growth',
+  name: 'SARAL MIS',
+  shortName: 'SARAL',
+  fullName: 'SARAL MIS — Management Information System',
+  tagline: 'Simplify. Automate. Grow.',
+  headline: 'The Smartest Way to Manage Your Business Operations',
   subheadline:
-    'From stunning websites to powerful business software — we help companies digitize, automate, and scale with cutting-edge technology.',
+    'SARAL MIS delivers powerful management software and digital solutions that help businesses digitize, automate, and scale with ease.',
   url: process.env.NEXT_PUBLIC_SITE_URL || 'https://suprimohub.in',
-  email: 'hello@airxsolution.com',
-  phone: '+91 72918 16889',
-  whatsapp: '917291816889',
+  email: 'info@suprimohub.in',
+  emailSecondary: 'chirag.worksplace@gmail.com',
+  phone: '+91 93105 93035',
+  whatsapp: '919310593035',
   address: 'New Delhi, India',
   founded: '2020',
 
   social: {
-    twitter: 'https://twitter.com/airxsolution',
-    linkedin: 'https://linkedin.com/company/airxsolution',
-    github: 'https://github.com/airxsolution',
-    instagram: 'https://instagram.com/airxsolution',
+    twitter: 'https://twitter.com/saralmis',
+    linkedin: 'https://linkedin.com/company/saralmis',
+    github: 'https://github.com/saralmis',
+    instagram: 'https://instagram.com/saralmis',
   },
 
   seo: {
-    title: 'AirX Solution — Premium Web Development & Business Software',
+    title: 'SARAL MIS — Management Information System & Business Software',
     description:
-      'We build beautiful digital experiences and powerful business software. Custom websites, ERP, CRM, HRMS, Shopify stores, and AI automation for modern businesses.',
+      'SARAL MIS provides powerful business management software — CRM, ERP, HRMS, Payroll, Inventory, and custom web solutions for modern businesses.',
     keywords:
-      'web development, business software, CRM, ERP, HRMS, Shopify, digital marketing, AI automation, custom software',
+      'management information system, business software, CRM, ERP, HRMS, payroll, inventory management, SARAL MIS',
     ogImage: '/og-image.png',
   },
 
@@ -40,7 +42,7 @@ export const siteConfig = {
   ],
 
   cta: {
-    primary: { label: 'Start Your Project', href: '/contact' },
+    primary: { label: 'Get Started Free', href: '/contact' },
     secondary: { label: 'View Our Work', href: '/portfolio' },
   },
 }

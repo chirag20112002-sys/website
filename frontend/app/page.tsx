@@ -2,11 +2,11 @@
 
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
-import { motion, useInView, AnimatePresence } from 'framer-motion'
+import { motion, useInView } from 'framer-motion'
 import {
   ArrowRight, Zap, Globe, LayoutDashboard, ShoppingBag, TrendingUp, Palette,
   Star, CheckCircle, Users, Trophy, Code2, Package, UserCheck, BadgeDollarSign,
-  Kanban, ShoppingCart, BarChart3, Settings, Quote, Play, X,
+  Kanban, ShoppingCart, BarChart3, Settings, Quote,
   Factory, Heart, Truck, GraduationCap, Rocket, Building2, Store,
   Search, FileText, Shield, Clock, Sparkles, ArrowUpRight,
   ChevronLeft, ChevronRight,
@@ -65,88 +65,56 @@ function Icon({ name, className }: { name: string; className?: string }) {
   return <C className={className} />
 }
 
-/* ─── Video Modal ────────────────────────────────────────────── */
-const DEMO_VIDEO_ID = 'mxBgN6FXmUI' // Replace with your actual YouTube demo video ID
+/* ─── Section: Hero (background video) ──────────────────────── */
+// Change this URL to swap the background video
+const BG_VIDEO_URL = 'https://assets.mixkit.co/videos/preview/mixkit-businessman-working-on-a-laptop-with-graphs-4835-large.mp4'
 
-function VideoModal({ onClose }: { onClose: () => void }) {
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
-    window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
-  }, [onClose])
-
-  return (
-    <AnimatePresence>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        className="fixed inset-0 z-[200] bg-black/85 backdrop-blur-md flex items-center justify-center p-4"
-        onClick={onClose}
-      >
-        <motion.div
-          initial={{ scale: 0.85, opacity: 0, y: 30 }}
-          animate={{ scale: 1, opacity: 1, y: 0 }}
-          exit={{ scale: 0.85, opacity: 0, y: 30 }}
-          transition={{ type: 'spring', damping: 20, stiffness: 200 }}
-          className="relative w-full max-w-5xl rounded-2xl overflow-hidden shadow-2xl"
-          style={{ aspectRatio: '16/9' }}
-          onClick={e => e.stopPropagation()}
-        >
-          <iframe
-            src={`https://www.youtube.com/embed/${DEMO_VIDEO_ID}?autoplay=1&rel=0&modestbranding=1`}
-            className="w-full h-full"
-            allow="autoplay; fullscreen; picture-in-picture"
-            allowFullScreen
-          />
-          <button
-            onClick={onClose}
-            className="absolute top-3 right-3 w-9 h-9 rounded-full bg-black/50 hover:bg-black/80 text-white flex items-center justify-center transition-colors z-10"
-          >
-            <X className="w-4 h-4" />
-          </button>
-        </motion.div>
-      </motion.div>
-    </AnimatePresence>
-  )
-}
-
-/* ─── Section: Hero ─────────────────────────────────────────── */
 function HeroSection() {
-  const [videoOpen, setVideoOpen] = useState(false)
-
   return (
-    <section className="relative min-h-screen flex items-center overflow-hidden bg-white">
-      <div className="absolute inset-0 bg-grid opacity-40" />
-      <div className="absolute top-20 -left-32 w-[600px] h-[600px] rounded-full bg-violet-500/10 blur-3xl" />
-      <div className="absolute bottom-0 -right-32 w-[500px] h-[500px] rounded-full bg-purple-500/10 blur-3xl" />
-
-      {videoOpen && <VideoModal onClose={() => setVideoOpen(false)} />}
+    <section className="relative min-h-screen flex items-center overflow-hidden bg-[#0f0520]">
+      {/* Background video */}
+      <video
+        autoPlay
+        muted
+        loop
+        playsInline
+        className="absolute inset-0 w-full h-full object-cover opacity-25"
+        src={BG_VIDEO_URL}
+      />
+      {/* Deep purple gradient overlay keeps text readable */}
+      <div className="absolute inset-0 bg-gradient-to-br from-[#1e0a4a]/95 via-violet-950/90 to-purple-950/85" />
+      {/* Subtle grid texture */}
+      <div className="absolute inset-0 bg-grid opacity-15" />
+      {/* Ambient glow orbs */}
+      <div className="absolute top-20 -left-32 w-[600px] h-[600px] rounded-full bg-violet-600/20 blur-3xl" />
+      <div className="absolute bottom-0 -right-32 w-[500px] h-[500px] rounded-full bg-purple-600/20 blur-3xl" />
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-20">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           {/* Left */}
           <div>
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-              <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-violet-500/10 border border-violet-500/20 text-violet-600 text-sm font-semibold mb-6">
-                <Sparkles className="w-3.5 h-3.5" /> {siteConfig.tagline}
+              <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 border border-white/20 text-white text-sm font-semibold mb-6">
+                <Sparkles className="w-3.5 h-3.5 text-violet-300" /> {siteConfig.tagline}
               </span>
             </motion.div>
 
             <motion.h1
               initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
-              className="text-5xl sm:text-6xl lg:text-7xl font-bold leading-[1.05] tracking-tight mb-6 text-slate-900"
+              className="text-5xl sm:text-6xl lg:text-7xl font-bold leading-[1.05] tracking-tight mb-6 text-white"
             >
               {siteConfig.headline.split(' ').slice(0, 3).join(' ')}{' '}
-              <span className="gradient-text">{siteConfig.headline.split(' ').slice(3, 6).join(' ')}</span>
+              <span className="bg-gradient-to-r from-violet-300 via-purple-300 to-fuchsia-300 bg-clip-text text-transparent">
+                {siteConfig.headline.split(' ').slice(3, 6).join(' ')}
+              </span>
               {' '}{siteConfig.headline.split(' ').slice(6).join(' ')}
             </motion.h1>
 
             <motion.p
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="text-xl text-slate-500 leading-relaxed mb-8 max-w-xl"
+              className="text-xl text-white/70 leading-relaxed mb-8 max-w-xl"
             >
               {siteConfig.subheadline}
             </motion.p>
@@ -156,20 +124,12 @@ function HeroSection() {
               transition={{ duration: 0.6, delay: 0.3 }}
               className="flex flex-wrap items-center gap-4 mb-10"
             >
-              <Link href={siteConfig.cta.primary.href} className="btn-primary text-base px-7 py-3.5">
+              <Link href={siteConfig.cta.primary.href} className="btn-primary text-base px-7 py-3.5 shadow-lg shadow-violet-500/40">
                 {siteConfig.cta.primary.label} <ArrowRight className="w-5 h-5" />
               </Link>
-
-              {/* Watch Demo Button */}
-              <button
-                onClick={() => setVideoOpen(true)}
-                className="inline-flex items-center gap-3 px-6 py-3.5 rounded-xl border border-slate-200 text-slate-700 font-semibold hover:border-violet-400 hover:text-violet-600 transition-all text-base group"
-              >
-                <span className="w-9 h-9 rounded-full bg-violet-600 flex items-center justify-center flex-shrink-0 group-hover:bg-violet-700 transition-colors animate-pulse-glow">
-                  <Play className="w-4 h-4 text-white fill-white ml-0.5" />
-                </span>
-                Watch Demo
-              </button>
+              <Link href="/portfolio" className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl border border-white/30 text-white font-semibold hover:bg-white/10 transition-all text-base">
+                View Our Work <ArrowUpRight className="w-4 h-4" />
+              </Link>
             </motion.div>
 
             <motion.div
@@ -182,8 +142,8 @@ function HeroSection() {
                 { icon: Shield, label: 'Source code ownership' },
                 { icon: Clock, label: 'On-time delivery' },
               ].map(({ icon: I, label }) => (
-                <div key={label} className="flex items-center gap-2 text-sm text-slate-500">
-                  <I className="w-4 h-4 text-emerald-500" /> {label}
+                <div key={label} className="flex items-center gap-2 text-sm text-white/60">
+                  <I className="w-4 h-4 text-emerald-400" /> {label}
                 </div>
               ))}
             </motion.div>
@@ -196,7 +156,7 @@ function HeroSection() {
             transition={{ duration: 0.8, delay: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
             className="relative hidden lg:block"
           >
-            <div className="relative rounded-2xl border border-slate-200 bg-white shadow-2xl shadow-violet-500/10 overflow-hidden">
+            <div className="relative rounded-2xl border border-white/10 bg-white/95 shadow-2xl shadow-black/40 overflow-hidden">
               <div className="flex items-center gap-2 px-4 py-3 border-b border-slate-100 bg-slate-50">
                 <div className="flex gap-1.5">
                   <div className="w-3 h-3 rounded-full bg-red-400" />
@@ -254,19 +214,19 @@ function HeroSection() {
 
             {/* Floating badges */}
             <motion.div animate={{ y: [-8, 8, -8] }} transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-              className="absolute -top-6 -right-6 bg-white rounded-2xl border border-slate-200 shadow-xl p-3 flex items-center gap-2">
+              className="absolute -top-6 -right-6 bg-white rounded-2xl border border-slate-200 shadow-2xl shadow-black/20 p-3 flex items-center gap-2">
               <div className="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center"><CheckCircle className="w-4 h-4 text-emerald-500" /></div>
               <div><p className="text-xs font-bold text-slate-800">Project Live</p><p className="text-[10px] text-slate-400">Delivered on time</p></div>
             </motion.div>
 
             <motion.div animate={{ y: [8, -8, 8] }} transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
-              className="absolute -bottom-4 -left-6 bg-white rounded-2xl border border-slate-200 shadow-xl p-3 flex items-center gap-2">
+              className="absolute -bottom-4 -left-6 bg-white rounded-2xl border border-slate-200 shadow-2xl shadow-black/20 p-3 flex items-center gap-2">
               <div className="w-8 h-8 rounded-lg bg-violet-500/10 flex items-center justify-center"><TrendingUp className="w-4 h-4 text-violet-500" /></div>
               <div><p className="text-xs font-bold text-slate-800">+340% Efficiency</p><p className="text-[10px] text-slate-400">Client result</p></div>
             </motion.div>
 
             <motion.div animate={{ y: [-6, 6, -6] }} transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
-              className="absolute top-1/2 -right-10 bg-white rounded-2xl border border-slate-200 shadow-xl p-3">
+              className="absolute top-1/2 -right-10 bg-white rounded-2xl border border-slate-200 shadow-2xl shadow-black/20 p-3">
               <div className="flex gap-1 mb-1">{[1,2,3,4,5].map(i => <Star key={i} className="w-3 h-3 fill-amber-400 text-amber-400" />)}</div>
               <p className="text-[10px] font-bold text-slate-800">5.0 Rating</p>
               <p className="text-[9px] text-slate-400">80+ reviews</p>
@@ -279,8 +239,8 @@ function HeroSection() {
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.5 }}
         className="absolute bottom-8 left-1/2 -translate-x-1/2">
         <motion.div animate={{ y: [0, 6, 0] }} transition={{ duration: 1.5, repeat: Infinity }}
-          className="w-5 h-8 rounded-full border-2 border-slate-300 flex items-start justify-center pt-1.5">
-          <div className="w-1 h-1.5 rounded-full bg-slate-400" />
+          className="w-5 h-8 rounded-full border-2 border-white/30 flex items-start justify-center pt-1.5">
+          <div className="w-1 h-1.5 rounded-full bg-white/60" />
         </motion.div>
       </motion.div>
     </section>

@@ -5,7 +5,6 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X, Zap, ChevronDown, ArrowRight } from 'lucide-react'
-import { siteConfig } from '@/config/site'
 
 const navItems = [
   { label: 'Solutions', href: '/solutions' },
@@ -31,12 +30,14 @@ export default function Navbar() {
   const pathname = usePathname()
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20)
+    const onScroll = () => setScrolled(window.scrollY > 60)
     window.addEventListener('scroll', onScroll)
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
   useEffect(() => { setOpen(false) }, [pathname])
+
+  const isHome = pathname === '/'
 
   return (
     <motion.header
@@ -46,7 +47,9 @@ export default function Navbar() {
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
           ? 'bg-white/95 backdrop-blur-xl border-b border-violet-100/80 shadow-sm shadow-violet-100'
-          : 'bg-transparent'
+          : isHome
+            ? 'bg-transparent'
+            : 'bg-white/90 backdrop-blur-md border-b border-violet-100/50'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -58,8 +61,8 @@ export default function Navbar() {
               <Zap className="w-4 h-4 text-white" />
             </div>
             <span className="font-bold text-[17px] tracking-tight font-display">
-              <span style={{ color: '#A78BFA' }}>SARAL</span>
-              <span style={{ color: '#4C1D95' }}> MIS</span>
+              <span style={{ color: isHome && !scrolled ? '#c4b5fd' : '#A78BFA' }}>SARAL</span>
+              <span style={{ color: isHome && !scrolled ? '#ffffff' : '#4C1D95' }}> MIS</span>
             </span>
           </Link>
 
@@ -73,9 +76,13 @@ export default function Navbar() {
                   onMouseEnter={() => setDropdown(item.label)}
                   onMouseLeave={() => setDropdown(null)}
                 >
-                  <button className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-violet-600 hover:bg-slate-100 transition-all">
+                  <button className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                    isHome && !scrolled
+                      ? 'text-white/80 hover:text-white hover:bg-white/10'
+                      : 'text-slate-600 hover:text-violet-600 hover:bg-slate-100'
+                  }`}>
                     {item.label}
-                    <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${dropdown === item.label ? 'rotate-180 text-violet-500' : ''}`} />
+                    <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${dropdown === item.label ? 'rotate-180' : ''}`} />
                   </button>
                   <AnimatePresence>
                     {dropdown === item.label && (
@@ -109,8 +116,12 @@ export default function Navbar() {
                   href={item.href!}
                   className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
                     pathname === item.href
-                      ? 'text-violet-600 bg-violet-50'
-                      : 'text-slate-600 hover:text-violet-600 hover:bg-slate-100'
+                      ? isHome && !scrolled
+                        ? 'text-white bg-white/15'
+                        : 'text-violet-600 bg-violet-50'
+                      : isHome && !scrolled
+                        ? 'text-white/80 hover:text-white hover:bg-white/10'
+                        : 'text-slate-600 hover:text-violet-600 hover:bg-slate-100'
                   }`}
                 >
                   {item.label}
@@ -119,18 +130,26 @@ export default function Navbar() {
             )}
           </nav>
 
-          {/* Right */}
+          {/* Right CTA */}
           <div className="hidden lg:flex items-center gap-2.5">
-            <Link href="/contact" className="btn-primary text-sm py-2 px-5">
+            <Link href="/contact" className={`text-sm py-2 px-5 rounded-xl font-semibold transition-all duration-200 ${
+              isHome && !scrolled
+                ? 'bg-white text-violet-700 hover:bg-white/90'
+                : 'btn-primary'
+            }`}>
               Get a Quote
             </Link>
           </div>
 
-          {/* Mobile Controls */}
+          {/* Mobile hamburger */}
           <div className="flex lg:hidden items-center gap-2">
             <button
               onClick={() => setOpen(!open)}
-              className="w-9 h-9 rounded-xl border border-violet-200 flex items-center justify-center text-violet-700"
+              className={`w-9 h-9 rounded-xl border flex items-center justify-center transition-colors ${
+                isHome && !scrolled
+                  ? 'border-white/30 text-white hover:bg-white/10'
+                  : 'border-violet-200 text-violet-700'
+              }`}
             >
               {open ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
             </button>
@@ -167,9 +186,7 @@ export default function Navbar() {
                     key={item.href}
                     href={item.href!}
                     className={`block px-3 py-2.5 rounded-xl text-sm font-semibold transition-all ${
-                      pathname === item.href
-                        ? 'text-violet-600 bg-violet-50'
-                        : 'text-slate-600 hover:text-violet-600 hover:bg-violet-50'
+                      pathname === item.href ? 'text-violet-600 bg-violet-50' : 'text-slate-600 hover:text-violet-600 hover:bg-violet-50'
                     }`}
                   >
                     {item.label}
@@ -177,9 +194,7 @@ export default function Navbar() {
                 )
               )}
               <div className="pt-3 border-t border-slate-100">
-                <Link href="/contact" className="btn-primary w-full justify-center">
-                  Get a Quote
-                </Link>
+                <Link href="/contact" className="btn-primary w-full justify-center">Get a Quote</Link>
               </div>
             </div>
           </motion.div>

@@ -3,11 +3,11 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, MessageCircle } from 'lucide-react'
+import { siteConfig } from '@/config/site'
 
 export default function WhatsAppButton() {
   const [open, setOpen] = useState(false)
-  const phone = '1234567890'
-  const message = 'Hello AirX Solution! I am interested in your services.'
+  const message = encodeURIComponent('Hello SARAL MIS! I am interested in your services.')
 
   return (
     <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3">
@@ -17,25 +17,28 @@ export default function WhatsAppButton() {
             initial={{ opacity: 0, scale: 0.8, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.8, y: 20 }}
-            className="glass-card p-5 w-72 mb-2"
+            className="glass-card p-5 w-72 mb-2 shadow-2xl"
           >
             <div className="flex items-center gap-3 mb-3">
-              <div className="w-10 h-10 rounded-full bg-green-500 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-full gradient-bg flex items-center justify-center shadow-lg">
                 <MessageCircle className="w-5 h-5 text-white" />
               </div>
               <div>
-                <p className="font-semibold text-slate-800 dark:text-white text-sm">AirX Solution</p>
+                <p className="font-semibold text-slate-800 text-sm">
+                  <span style={{ color: '#A78BFA' }}>SARAL</span>
+                  <span style={{ color: '#4C1D95' }}> MIS</span>
+                </p>
                 <p className="text-xs text-green-500 flex items-center gap-1">
                   <span className="w-1.5 h-1.5 rounded-full bg-green-500 inline-block animate-pulse" />
                   Online now
                 </p>
               </div>
             </div>
-            <p className="text-sm text-slate-600 dark:text-slate-300 mb-4">
-              👋 Hi there! How can we help you today? Chat with us on WhatsApp.
+            <p className="text-sm text-slate-600 mb-4">
+              👋 Hi there! How can we help you today? Chat with us on WhatsApp for quick support.
             </p>
             <a
-              href={`https://wa.me/${phone}?text=${encodeURIComponent(message)}`}
+              href={`https://wa.me/${siteConfig.whatsapp}?text=${message}`}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-green-500 hover:bg-green-600 text-white font-semibold text-sm transition-colors"

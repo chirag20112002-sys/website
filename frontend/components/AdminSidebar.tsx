@@ -54,7 +54,7 @@ export default function AdminSidebar() {
         <div className="w-8 h-8 rounded-lg gradient-bg flex items-center justify-center flex-shrink-0">
           <Zap className="w-4 h-4 text-white" />
         </div>
-        {!collapsed && <span className="font-bold font-display text-white">AirX Admin</span>}
+        {!collapsed && <span className="font-bold font-display text-white">SARAL Admin</span>}
       </div>
 
       {/* Navigation */}

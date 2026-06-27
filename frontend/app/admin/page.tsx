@@ -20,11 +20,11 @@ export default function AdminLoginPage() {
 
     await new Promise(r => setTimeout(r, 1000))
 
-    if (email === 'admin@airxsolution.com' && password === 'admin123') {
+    if (email === 'admin@suprimohub.in' && password === 'admin123') {
       localStorage.setItem('admin-auth', 'true')
       router.push('/admin/dashboard')
     } else {
-      setError('Invalid email or password. Try admin@airxsolution.com / admin123')
+      setError('Invalid email or password. Try admin@suprimohub.in / admin123')
     }
     setLoading(false)
   }
@@ -47,7 +47,7 @@ export default function AdminLoginPage() {
               <Zap className="w-7 h-7 text-white" />
             </div>
             <h1 className="text-2xl font-bold font-display text-white mb-1">Admin Panel</h1>
-            <p className="text-slate-400 text-sm">AirX Solution Management</p>
+            <p className="text-slate-400 text-sm">SARAL MIS Management</p>
           </div>
 
           <form onSubmit={handleLogin} className="space-y-5">
@@ -59,7 +59,7 @@ export default function AdminLoginPage() {
                   type="email"
                   value={email}
                   onChange={e => setEmail(e.target.value)}
-                  placeholder="admin@airxsolution.com"
+                  placeholder="admin@suprimohub.in"
                   required
                   className="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-800 border border-slate-700 text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                 />
@@ -92,7 +92,7 @@ export default function AdminLoginPage() {
             )}
 
             <div className="p-3 rounded-xl bg-indigo-900/20 border border-indigo-500/30 text-indigo-400 text-xs">
-              Demo: admin@airxsolution.com / admin123
+              Demo: admin@suprimohub.in / admin123
             </div>
 
             <button type="submit" disabled={loading} className="btn-primary w-full justify-center py-3.5">

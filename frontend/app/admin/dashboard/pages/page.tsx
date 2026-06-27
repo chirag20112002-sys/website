@@ -5,15 +5,15 @@ import { Edit, Save, X } from 'lucide-react'
 
 const pages = [
   { id: 'home', label: 'Home Page', fields: [
-    { key: 'heroTitle', label: 'Hero Title', value: 'We Build Digital Experiences That Convert', type: 'text' },
-    { key: 'heroSubtitle', label: 'Hero Subtitle', value: 'From stunning websites and Shopify stores to powerful admin panels and business automation — AirX Solution turns your vision into a high-performing digital reality.', type: 'textarea' },
-    { key: 'heroCTA', label: 'CTA Button Text', value: 'Start Your Project', type: 'text' },
+    { key: 'heroTitle', label: 'Hero Title', value: 'The Smartest Way to Manage Your Business Operations', type: 'text' },
+    { key: 'heroSubtitle', label: 'Hero Subtitle', value: 'SARAL MIS delivers powerful management software and digital solutions that help businesses digitize, automate, and scale with ease.', type: 'textarea' },
+    { key: 'heroCTA', label: 'CTA Button Text', value: 'Get Started Free', type: 'text' },
     { key: 'statsProjects', label: 'Projects Count', value: '150', type: 'text' },
     { key: 'statsClients', label: 'Clients Count', value: '80', type: 'text' },
   ]},
   { id: 'about', label: 'About Page', fields: [
-    { key: 'aboutTitle', label: 'Page Title', value: 'We\'re a Team of Digital Craftsmen', type: 'text' },
-    { key: 'aboutStory', label: 'Company Story', value: 'AirX Solution was born in 2019 from a simple frustration: great digital agencies were out of reach for most small and medium businesses.', type: 'textarea' },
+    { key: 'aboutTitle', label: 'Page Title', value: 'We\'re a Team of Digital Builders', type: 'text' },
+    { key: 'aboutStory', label: 'Company Story', value: 'SARAL MIS was founded in 2020 by Chirag Patel and Nitin Sharma to make powerful business software accessible to every Indian business.', type: 'textarea' },
     { key: 'mission', label: 'Mission Statement', value: 'To empower businesses of every size with world-class digital solutions that drive real, measurable growth.', type: 'textarea' },
     { key: 'vision', label: 'Vision Statement', value: 'To be the most trusted digital partner for growing businesses worldwide.', type: 'textarea' },
   ]},

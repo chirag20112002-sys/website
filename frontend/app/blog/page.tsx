@@ -62,7 +62,7 @@ export default function BlogPage() {
               Insights & <span className="gradient-text">Resources</span>
             </h1>
             <p className="text-xl text-slate-500 dark:text-slate-400 max-w-2xl mx-auto">
-              Expert articles on web development, Shopify, UI/UX, and digital strategy from the AirX team.
+              Expert articles on business software, ERP, CRM, HRMS, and digital strategy from the SARAL MIS team.
             </p>
           </motion.div>
         </div>

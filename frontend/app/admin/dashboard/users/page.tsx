@@ -4,9 +4,9 @@ import { useState } from 'react'
 import { Plus, Edit, Trash2, Shield, User } from 'lucide-react'
 
 const initial = [
-  { id: 1, name: 'Admin User', email: 'admin@airxsolution.com', role: 'super_admin', status: 'active', lastLogin: '2025-06-22 10:30' },
-  { id: 2, name: 'Content Manager', email: 'content@airxsolution.com', role: 'editor', status: 'active', lastLogin: '2025-06-21 16:00' },
-  { id: 3, name: 'Support Staff', email: 'support@airxsolution.com', role: 'viewer', status: 'inactive', lastLogin: '2025-06-15 09:00' },
+  { id: 1, name: 'Chirag Patel', email: 'admin@suprimohub.in', role: 'super_admin', status: 'active', lastLogin: '2025-06-22 10:30' },
+  { id: 2, name: 'Nitin Sharma', email: 'nitin@suprimohub.in', role: 'editor', status: 'active', lastLogin: '2025-06-21 16:00' },
+  { id: 3, name: 'Anjali Gupta', email: 'anjali@suprimohub.in', role: 'viewer', status: 'active', lastLogin: '2025-06-25 09:00' },
 ]
 
 const roles = [
@@ -62,7 +62,7 @@ export default function AdminUsersPage() {
               </div>
               <div>
                 <label className="block text-sm font-medium text-slate-300 mb-1.5">Email</label>
-                <input type="email" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} className="input-field" placeholder="user@airxsolution.com" />
+                <input type="email" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} className="input-field" placeholder="user@suprimohub.in" />
               </div>
               <div>
                 <label className="block text-sm font-medium text-slate-300 mb-1.5">Password</label>

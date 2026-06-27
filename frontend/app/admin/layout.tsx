@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: { default: 'Admin Panel', template: '%s | AirX Admin' },
+  title: { default: 'Admin Panel', template: '%s | SARAL Admin' },
   robots: { index: false, follow: false },
 }
 

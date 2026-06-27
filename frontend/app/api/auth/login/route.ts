@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { SignJWT } from 'jose'
 
-const ADMIN_EMAIL = 'admin@airxsolution.com'
+const ADMIN_EMAIL = 'admin@suprimohub.in'
 const ADMIN_PASSWORD = 'admin123'
-const secret = new TextEncoder().encode(process.env.ADMIN_JWT_SECRET || 'airx-admin-secret-2025')
+const secret = new TextEncoder().encode(process.env.ADMIN_JWT_SECRET || 'saral-mis-admin-secret-2025')
 
 export async function POST(req: NextRequest) {
   try {

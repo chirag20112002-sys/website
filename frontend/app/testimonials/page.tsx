@@ -55,7 +55,7 @@ export default function TestimonialsPage() {
               Client Stories & <span className="gradient-text">Reviews</span>
             </h1>
             <p className="text-xl text-slate-500 dark:text-slate-400 max-w-2xl mx-auto">
-              Real results from real businesses. Here's what our clients say about working with AirX Solution.
+              Real results from real businesses. Here's what our clients say about working with SARAL MIS.
             </p>
           </motion.div>
         </div>

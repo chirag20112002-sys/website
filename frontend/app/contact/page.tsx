@@ -16,10 +16,10 @@ function FadeIn({ children, delay = 0, className = '' }: { children: React.React
 }
 
 const contactInfo = [
-  { icon: Mail, title: 'Email Us', value: 'hello@airxsolution.com', desc: 'We reply within 2-4 hours', href: 'mailto:hello@airxsolution.com' },
-  { icon: Phone, title: 'Call Us', value: '+1 (234) 567-8900', desc: 'Mon–Fri, 9AM – 6PM EST', href: 'tel:+1234567890' },
-  { icon: MessageCircle, title: 'WhatsApp', value: '+1 (234) 567-8900', desc: 'Chat with us instantly', href: 'https://wa.me/1234567890' },
-  { icon: MapPin, title: 'Visit Us', value: '123 Digital Avenue', desc: 'Tech City, TC 10001', href: '#map' },
+  { icon: Mail, title: 'Email Us', value: 'info@suprimohub.in', desc: 'We reply within 2-4 hours', href: 'mailto:info@suprimohub.in' },
+  { icon: Phone, title: 'Call Us', value: '+91 93105 93035', desc: 'Mon–Sat, 10AM – 7PM IST', href: 'tel:+919310593035' },
+  { icon: MessageCircle, title: 'WhatsApp', value: '+91 93105 93035', desc: 'Chat with us instantly', href: 'https://wa.me/919310593035' },
+  { icon: MapPin, title: 'Location', value: 'New Delhi, India', desc: 'Serving clients nationwide', href: '#map' },
 ]
 
 const services = ['Website Development', 'Shopify Store Development', 'Shopify Customization', 'Admin Panel Development', 'E-Commerce Solutions', 'Web Application', 'UI/UX Design', 'Business Automation', 'Maintenance & Support', 'Other']
@@ -196,9 +196,9 @@ export default function ContactPage() {
 
               <div className="glass-card p-6 text-center">
                 <h3 className="font-bold text-slate-800 dark:text-white font-display mb-2">Prefer to Chat?</h3>
-                <p className="text-sm text-slate-500 dark:text-slate-400 mb-4">Jump on a quick WhatsApp call with our team</p>
+                <p className="text-sm text-slate-500 mb-4">Jump on a quick WhatsApp call with our team</p>
                 <a
-                  href="https://wa.me/1234567890?text=Hello AirX Solution! I have a project I'd like to discuss."
+                  href="https://wa.me/919310593035?text=Hello%20SARAL%20MIS!%20I%20have%20a%20project%20I%27d%20like%20to%20discuss."
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-green-500 hover:bg-green-600 text-white font-semibold text-sm transition-colors"

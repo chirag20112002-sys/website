@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState } from 'react'
 import { Edit, Save, X } from 'lucide-react'
@@ -13,7 +13,7 @@ const pages = [
   ]},
   { id: 'about', label: 'About Page', fields: [
     { key: 'aboutTitle', label: 'Page Title', value: 'We\'re a Team of Digital Builders', type: 'text' },
-    { key: 'aboutStory', label: 'Company Story', value: 'SARAL MIS was founded in 2020 by Chirag Patel and Nitin Sharma to make powerful business software accessible to every Indian business.', type: 'textarea' },
+    { key: 'aboutStory', label: 'Company Story', value: 'SARAL MIS was founded in 2020 by Chirag Chhatwal and Nitin Kumar to make powerful business software accessible to every Indian business.', type: 'textarea' },
     { key: 'mission', label: 'Mission Statement', value: 'To empower businesses of every size with world-class digital solutions that drive real, measurable growth.', type: 'textarea' },
     { key: 'vision', label: 'Vision Statement', value: 'To be the most trusted digital partner for growing businesses worldwide.', type: 'textarea' },
   ]},
@@ -46,7 +46,7 @@ export default function AdminPagesPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold font-display text-white">Page Content</h1>
-        <p className="text-slate-400 text-sm">Edit text content for each page without touching code.</p>
+        <p className="text-slate-500 text-sm">Edit text content for each page without touching code.</p>
       </div>
 
       {saved && (
@@ -58,13 +58,13 @@ export default function AdminPagesPage() {
       <div className="flex gap-6">
         {/* Page selector */}
         <div className="w-48 flex-shrink-0">
-          <div className="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+          <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
             {pages.map(p => (
               <button
                 key={p.id}
                 onClick={() => switchPage(p)}
-                className={`w-full text-left px-4 py-3 text-sm font-medium border-b border-slate-800 last:border-0 transition-colors ${
-                  activePage.id === p.id ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:bg-slate-800 hover:text-white'
+                className={`w-full text-left px-4 py-3 text-sm font-medium border-b border-gray-200 last:border-0 transition-colors ${
+                  activePage.id === p.id ? 'bg-violet-600 text-white' : 'text-slate-400 hover:bg-gray-100 hover:text-slate-800'
                 }`}
               >
                 {p.label}
@@ -75,14 +75,14 @@ export default function AdminPagesPage() {
 
         {/* Fields */}
         <div className="flex-1 space-y-4">
-          <div className="bg-slate-900 border border-slate-800 rounded-xl p-5">
-            <h2 className="font-bold text-white font-display mb-5">{activePage.label}</h2>
+          <div className="bg-white border border-gray-200 rounded-xl p-5">
+            <h2 className="font-bold text-slate-800 font-display mb-5">{activePage.label}</h2>
             <div className="space-y-5">
               {fields.map(f => (
                 <div key={f.key}>
                   <div className="flex items-center justify-between mb-1.5">
-                    <label className="text-sm font-medium text-slate-300">{f.label}</label>
-                    <button onClick={() => setEditing(editing === f.key ? null : f.key)} className="text-xs text-indigo-400 hover:text-indigo-300 flex items-center gap-1">
+                    <label className="text-sm font-medium text-slate-700">{f.label}</label>
+                    <button onClick={() => setEditing(editing === f.key ? null : f.key)} className="text-xs text-violet-600 hover:text-indigo-300 flex items-center gap-1">
                       <Edit className="w-3 h-3" /> {editing === f.key ? 'Cancel' : 'Edit'}
                     </button>
                   </div>
@@ -105,7 +105,7 @@ export default function AdminPagesPage() {
                       />
                     )
                   ) : (
-                    <div className="p-3 rounded-lg bg-slate-800 border border-slate-700 text-slate-300 text-sm">
+                    <div className="p-3 rounded-lg bg-slate-800 border border-gray-200 text-slate-700 text-sm">
                       {f.value}
                     </div>
                   )}

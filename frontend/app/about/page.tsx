@@ -27,46 +27,39 @@ const values = [
 
 const team = [
   {
-    name: 'Chirag Patel',
-    role: 'Founder & CEO',
-    initials: 'CP',
+    name: 'Chirag Chhatwal',
+    role: 'Founder, CEO & Managing Director',
+    initials: 'CC',
     color: 'from-violet-500 to-purple-700',
-    bio: '8+ years in business software and digital solutions. Passionate about making technology accessible to every business.',
+    bio: '8+ years in business software and digital solutions. Passionate about making technology accessible to every Indian business.',
   },
   {
-    name: 'Nitin Sharma',
-    role: 'Co-Founder & CTO',
-    initials: 'NS',
+    name: 'Nitin Kumar',
+    role: 'Co-Founder',
+    initials: 'NK',
     color: 'from-indigo-500 to-blue-700',
     bio: 'Full-stack engineer specializing in ERP systems, cloud infrastructure, and scalable architectures.',
   },
   {
-    name: 'Anjali Gupta',
-    role: 'Lead UI/UX Designer',
-    initials: 'AG',
+    name: 'Riya',
+    role: 'Social Media Manager',
+    initials: 'R',
+    color: 'from-pink-500 to-rose-600',
+    bio: 'Crafts compelling brand stories and drives engagement across all digital platforms.',
+  },
+  {
+    name: 'Sonu',
+    role: 'Creative Designer',
+    initials: 'S',
     color: 'from-emerald-500 to-teal-600',
-    bio: 'Product designer with a passion for clean, functional interfaces that users love.',
+    bio: 'Translates ideas into stunning visuals. Specializes in UI/UX and brand identity design.',
   },
   {
-    name: 'Rahul Verma',
-    role: 'Head of Engineering',
-    initials: 'RV',
-    color: 'from-orange-500 to-amber-600',
-    bio: 'Backend specialist in Node.js, PostgreSQL, and cloud deployment for enterprise-grade systems.',
-  },
-  {
-    name: 'Priya Singh',
-    role: 'Business Development',
-    initials: 'PS',
-    color: 'from-rose-500 to-pink-600',
-    bio: 'Drives client partnerships and growth strategy, connecting the right solutions to the right businesses.',
-  },
-  {
-    name: 'Arjun Mehta',
-    role: 'Project Manager',
-    initials: 'AM',
-    color: 'from-cyan-500 to-blue-600',
-    bio: 'PMP certified — ensures every project is delivered on time, within scope, and to spec.',
+    name: 'Sunny Rathor',
+    role: 'Performance Marketing Manager',
+    initials: 'SR',
+    color: 'from-amber-500 to-orange-600',
+    bio: 'Data-driven marketer focused on ROI, paid ads, and growth strategies for Indian markets.',
   },
 ]
 
@@ -98,7 +91,7 @@ export default function AboutPage() {
               <span className="badge bg-violet-100 text-violet-600 mb-4">Our Story</span>
               <h2 className="text-4xl font-bold font-display mb-5">Built From <span className="gradient-text">Passion</span></h2>
               <div className="space-y-4 text-slate-600 leading-relaxed">
-                <p>SARAL MIS was founded in 2020 when Chirag Patel and Nitin Sharma saw a gap: powerful business software was either too expensive or too complex for Indian SMBs. They vowed to build solutions that actually fit how Indian businesses operate.</p>
+                <p>SARAL MIS was founded in 2020 when Chirag Chhatwal and Nitin Kumar saw a gap: powerful business software was either too expensive or too complex for Indian SMBs. They vowed to build solutions that actually fit how Indian businesses operate.</p>
                 <p>Starting as a two-person team, we took on every project with the same level of care — whether it was a simple billing system or a full ERP platform. That commitment earned us our first clients, who became our biggest advocates.</p>
                 <p>Today, we're a team of 15+ specialists across development, design, and strategy. We've delivered 150+ projects across 20+ industries, and we're just getting started.</p>
               </div>

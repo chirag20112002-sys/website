@@ -184,7 +184,7 @@ export default function AdminSettingsPage() {
           <p className="text-slate-400 text-sm mt-1">Control every piece of content on your website from here.</p>
         </div>
         <div className="flex items-center gap-3">
-          <button onClick={refresh} className="p-2 rounded-lg border border-slate-700 text-slate-400 hover:text-white hover:bg-slate-800 transition-all">
+          <button onClick={refresh} className="p-2 rounded-lg border border-gray-200 text-slate-400 hover:text-white hover:bg-gray-100 transition-all">
             <RefreshCw className="w-4 h-4" />
           </button>
           <button onClick={handleSave} disabled={saving} className="btn-primary text-sm py-2 px-4">
@@ -207,7 +207,7 @@ export default function AdminSettingsPage() {
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         {/* Sidebar */}
         <div className="lg:col-span-1">
-          <div className="bg-slate-900 border border-slate-800 rounded-xl p-2 space-y-1 sticky top-4">
+          <div className="bg-white border border-gray-200 rounded-xl p-2 space-y-1 sticky top-4">
             {sections.map(s => {
               const Icon = s.icon
               return (
@@ -217,7 +217,7 @@ export default function AdminSettingsPage() {
                   className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all text-left ${
                     activeSection === s.id
                       ? 'bg-violet-600 text-white'
-                      : 'text-slate-400 hover:text-white hover:bg-slate-800'
+                      : 'text-slate-400 hover:text-white hover:bg-gray-100'
                   }`}
                 >
                   <Icon className="w-4 h-4 flex-shrink-0" />
@@ -230,7 +230,7 @@ export default function AdminSettingsPage() {
 
         {/* Form Panel */}
         <div className="lg:col-span-3">
-          <div className="bg-slate-900 border border-slate-800 rounded-xl p-6">
+          <div className="bg-white border border-gray-200 rounded-xl p-6">
             <h2 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
               <currentSection.icon className="w-5 h-5 text-violet-400" />
               {currentSection.label}
@@ -244,7 +244,7 @@ export default function AdminSettingsPage() {
                     const meta = fieldMeta[key] || { label: key }
                     return (
                       <div key={key}>
-                        <label className="block text-sm font-medium text-slate-300 mb-1.5">{meta.label}</label>
+                        <label className="block text-sm font-medium text-slate-700 mb-1.5">{meta.label}</label>
                         <input
                           type="text"
                           value={settings[key] || ''}
@@ -262,7 +262,7 @@ export default function AdminSettingsPage() {
                   const val = settings[key] || ''
                   return (
                     <div key={key}>
-                      <label className="block text-sm font-medium text-slate-300 mb-1.5">{meta.label}</label>
+                      <label className="block text-sm font-medium text-slate-700 mb-1.5">{meta.label}</label>
                       {meta.textarea ? (
                         <textarea
                           value={val}
@@ -281,7 +281,7 @@ export default function AdminSettingsPage() {
                       {meta.hint && <p className="text-xs text-slate-500 mt-1">{meta.hint}</p>}
                       {/* Image preview */}
                       {isImage && val && (
-                        <div className="mt-2 rounded-lg overflow-hidden border border-slate-700 w-48 h-28">
+                        <div className="mt-2 rounded-lg overflow-hidden border border-gray-200 w-48 h-28">
                           <img src={val} alt="preview" className="w-full h-full object-cover" onError={e => (e.currentTarget.style.display = 'none')} />
                         </div>
                       )}
@@ -297,7 +297,7 @@ export default function AdminSettingsPage() {
               )}
             </div>
 
-            <div className="flex items-center gap-4 mt-8 pt-6 border-t border-slate-800">
+            <div className="flex items-center gap-4 mt-8 pt-6 border-t border-gray-200">
               <button onClick={handleSave} disabled={saving} className="btn-primary">
                 <Save className="w-4 h-4" /> {saving ? 'Saving…' : 'Save Settings'}
               </button>

@@ -1,23 +1,29 @@
 'use client'
 
 import { useState } from 'react'
-import { Edit, Save, Plus, Trash2 } from 'lucide-react'
+import { Edit, Save, X } from 'lucide-react'
+import ImageUpload from '@/components/ImageUpload'
 
 const initialServices = [
-  { id: 1, title: 'Website Development', icon: 'Code2', desc: 'Custom, blazing-fast websites built with modern frameworks.', active: true, order: 1 },
-  { id: 2, title: 'Shopify Store Setup', icon: 'ShoppingBag', desc: 'Launch your Shopify store with expert setup and configuration.', active: true, order: 2 },
-  { id: 3, title: 'Shopify Customization', icon: 'Settings', desc: 'Transform your existing Shopify store with custom features.', active: true, order: 3 },
-  { id: 4, title: 'Admin Panels', icon: 'LayoutDashboard', desc: 'Powerful, intuitive dashboards for business control.', active: true, order: 4 },
-  { id: 5, title: 'E-Commerce Solutions', icon: 'ShoppingCart', desc: 'Full-stack e-commerce development solutions.', active: true, order: 5 },
-  { id: 6, title: 'Business Automation', icon: 'Bot', desc: 'Automate repetitive tasks and integrate your business tools.', active: false, order: 6 },
+  { id: 1, title: 'ERP Development', image: '', desc: 'End-to-end ERP solutions tailored for Indian businesses — manufacturing, retail, and services.', active: true },
+  { id: 2, title: 'HRMS & Payroll', image: '', desc: 'Complete HR management with GST-compliant payroll, leave tracking, and attendance.', active: true },
+  { id: 3, title: 'CRM System', image: '', desc: 'Smart CRM to manage leads, follow-ups, and client relationships effortlessly.', active: true },
+  { id: 4, title: 'Inventory Management', image: '', desc: 'Real-time stock tracking, purchase orders, and warehouse management.', active: true },
+  { id: 5, title: 'Website Development', image: '', desc: 'Custom, fast websites built with modern frameworks.', active: true },
+  { id: 6, title: 'Business Automation', image: '', desc: 'Automate workflows and integrate your existing business tools.', active: false },
 ]
+
+type Service = typeof initialServices[0]
 
 export default function AdminServicesPage() {
   const [services, setServices] = useState(initialServices)
-  const [editing, setEditing] = useState<null | typeof initialServices[0]>(null)
-  const [form, setForm] = useState({ title: '', desc: '', active: true })
+  const [editing, setEditing] = useState<Service | null>(null)
+  const [form, setForm] = useState({ title: '', desc: '', image: '', active: true })
 
-  const openEdit = (s: typeof initialServices[0]) => { setEditing(s); setForm({ title: s.title, desc: s.desc, active: s.active }) }
+  const openEdit = (s: Service) => {
+    setEditing(s)
+    setForm({ title: s.title, desc: s.desc, image: s.image || '', active: s.active })
+  }
 
   const handleSave = () => {
     if (!editing) return
@@ -30,34 +36,45 @@ export default function AdminServicesPage() {
   return (
     <div className="space-y-6 max-w-3xl">
       <div>
-        <h1 className="text-2xl font-bold font-display text-white">Services</h1>
-        <p className="text-slate-400 text-sm">Manage the services shown on your website.</p>
+        <h1 className="text-2xl font-bold font-display text-slate-800">Services</h1>
+        <p className="text-slate-500 text-sm">Manage the services shown on your website.</p>
       </div>
 
       {editing && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
-          <div className="bg-slate-900 border border-slate-700 rounded-2xl p-6 w-full max-w-lg">
-            <h2 className="text-lg font-bold text-white font-display mb-5">Edit Service</h2>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
+          <div className="bg-white border border-gray-200 rounded-2xl p-6 w-full max-w-lg shadow-2xl max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between mb-5">
+              <h2 className="text-lg font-bold text-slate-800 font-display">Edit Service</h2>
+              <button onClick={() => setEditing(null)} className="p-1 rounded-lg text-slate-400 hover:bg-gray-100">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-1.5">Service Title</label>
+                <label className="block text-sm font-medium text-slate-700 mb-1.5">Service Title</label>
                 <input type="text" value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} className="input-field" />
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-1.5">Description</label>
+                <label className="block text-sm font-medium text-slate-700 mb-1.5">Description</label>
                 <textarea value={form.desc} onChange={e => setForm(f => ({ ...f, desc: e.target.value }))} rows={3} className="input-field resize-none" />
               </div>
+              <ImageUpload
+                label="Service Image"
+                value={form.image}
+                onChange={url => setForm(f => ({ ...f, image: url }))}
+                hint="Recommended: 800×500px, shown in service cards"
+              />
               <div className="flex items-center gap-3">
                 <label className="relative inline-flex items-center cursor-pointer">
                   <input type="checkbox" checked={form.active} onChange={e => setForm(f => ({ ...f, active: e.target.checked }))} className="sr-only peer" />
-                  <div className="w-10 h-5 bg-slate-700 peer-focus:ring-2 peer-focus:ring-indigo-500 rounded-full peer peer-checked:after:translate-x-5 after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-600"></div>
+                  <div className="w-10 h-5 bg-gray-200 peer-focus:ring-2 peer-focus:ring-violet-500 rounded-full peer peer-checked:after:translate-x-5 after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-violet-600"></div>
                 </label>
-                <span className="text-sm text-slate-300">Active (visible on site)</span>
+                <span className="text-sm text-slate-600">Active (visible on site)</span>
               </div>
             </div>
             <div className="flex gap-3 mt-6">
               <button onClick={handleSave} className="btn-primary flex-1 justify-center"><Save className="w-4 h-4" /> Save Changes</button>
-              <button onClick={() => setEditing(null)} className="flex-1 py-2.5 rounded-xl border border-slate-700 text-slate-300 hover:bg-slate-800 text-sm font-medium">Cancel</button>
+              <button onClick={() => setEditing(null)} className="flex-1 py-2.5 rounded-xl border border-gray-200 text-slate-600 hover:bg-gray-50 text-sm font-medium">Cancel</button>
             </div>
           </div>
         </div>
@@ -65,28 +82,26 @@ export default function AdminServicesPage() {
 
       <div className="space-y-3">
         {services.map(s => (
-          <div key={s.id} className="bg-slate-900 border border-slate-800 rounded-xl p-4 flex items-center gap-4">
+          <div key={s.id} className="bg-white border border-gray-200 rounded-xl p-4 flex items-center gap-4">
+            {s.image ? (
+              <img src={s.image} alt={s.title} className="w-14 h-10 rounded-lg object-cover flex-shrink-0 border border-gray-100" />
+            ) : (
+              <div className="w-14 h-10 rounded-lg bg-violet-50 flex items-center justify-center flex-shrink-0 text-violet-300 text-xs">No img</div>
+            )}
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-1">
-                <h3 className="font-medium text-white text-sm">{s.title}</h3>
-                <span className={`badge text-xs ${s.active ? 'bg-emerald-500/10 text-emerald-400' : 'bg-slate-500/10 text-slate-400'}`}>
+                <h3 className="font-semibold text-slate-800 text-sm">{s.title}</h3>
+                <span className={`badge text-xs ${s.active ? 'bg-emerald-100 text-emerald-700' : 'bg-gray-100 text-slate-500'}`}>
                   {s.active ? 'Active' : 'Hidden'}
                 </span>
               </div>
-              <p className="text-xs text-slate-500">{s.desc}</p>
+              <p className="text-xs text-slate-400">{s.desc}</p>
             </div>
             <div className="flex items-center gap-2">
-              <button
-                onClick={() => toggleActive(s.id)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-                  s.active
-                    ? 'bg-slate-700 text-slate-300 hover:bg-slate-600'
-                    : 'bg-emerald-900/30 text-emerald-400 hover:bg-emerald-900/50'
-                }`}
-              >
+              <button onClick={() => toggleActive(s.id)} className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${s.active ? 'bg-gray-100 text-slate-600 hover:bg-gray-200' : 'bg-emerald-50 text-emerald-600 hover:bg-emerald-100'}`}>
                 {s.active ? 'Hide' : 'Show'}
               </button>
-              <button onClick={() => openEdit(s)} className="p-1.5 rounded-lg text-slate-400 hover:text-indigo-400 hover:bg-indigo-500/10 transition-all">
+              <button onClick={() => openEdit(s)} className="p-1.5 rounded-lg text-slate-400 hover:text-violet-600 hover:bg-violet-50 transition-all">
                 <Edit className="w-4 h-4" />
               </button>
             </div>

@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState, useRef } from 'react'
 import { motion, useInView } from 'framer-motion'
@@ -16,7 +16,7 @@ function FadeIn({ children, delay = 0, className = '' }: { children: React.React
 }
 
 const contactInfo = [
-  { icon: Mail, title: 'Email Us', value: 'info@suprimohub.in', desc: 'We reply within 2-4 hours', href: 'mailto:info@suprimohub.in' },
+  { icon: Mail, title: 'Email Us', value: 'info@saralmis.in', desc: 'We reply within 2-4 hours', href: 'mailto:info@saralmis.in' },
   { icon: Phone, title: 'Call Us', value: '+91 93105 93035', desc: 'Mon–Sat, 10AM – 7PM IST', href: 'tel:+919310593035' },
   { icon: MessageCircle, title: 'WhatsApp', value: '+91 93105 93035', desc: 'Chat with us instantly', href: 'https://wa.me/919310593035?text=Hello%20SARAL%20MIS!' },
   { icon: MapPin, title: 'Location', value: 'New Delhi, India', desc: 'Serving clients pan-India', href: '#map' },

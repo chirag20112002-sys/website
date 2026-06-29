@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
@@ -20,11 +20,11 @@ export default function AdminLoginPage() {
 
     await new Promise(r => setTimeout(r, 1000))
 
-    if (email === 'admin@suprimohub.in' && password === 'admin123') {
+    if (email === 'admin@saralmis.in' && password === 'admin123') {
       localStorage.setItem('admin-auth', 'true')
       router.push('/admin/dashboard')
     } else {
-      setError('Invalid email or password. Try admin@suprimohub.in / admin123')
+      setError('Invalid email or password. Try admin@saralmis.in / admin123')
     }
     setLoading(false)
   }
@@ -59,7 +59,7 @@ export default function AdminLoginPage() {
                   type="email"
                   value={email}
                   onChange={e => setEmail(e.target.value)}
-                  placeholder="admin@suprimohub.in"
+                  placeholder="admin@saralmis.in"
                   required
                   className="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-800 border border-slate-700 text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                 />
@@ -92,7 +92,7 @@ export default function AdminLoginPage() {
             )}
 
             <div className="p-3 rounded-xl bg-indigo-900/20 border border-indigo-500/30 text-indigo-400 text-xs">
-              Demo: admin@suprimohub.in / admin123
+              Demo: admin@saralmis.in / admin123
             </div>
 
             <button type="submit" disabled={loading} className="btn-primary w-full justify-center py-3.5">

@@ -1,4 +1,4 @@
-// ─── Site Configuration ────────────────────────────────────────────────────
+﻿// ─── Site Configuration ────────────────────────────────────────────────────
 // All branding, content, and settings are controlled from this file.
 // Change values here to update the entire website.
 
@@ -10,8 +10,8 @@ export const siteConfig = {
   headline: 'The Smartest Way to Manage Your Business Operations',
   subheadline:
     'SARAL MIS delivers powerful management software and digital solutions that help businesses digitize, automate, and scale with ease.',
-  url: process.env.NEXT_PUBLIC_SITE_URL || 'https://suprimohub.in',
-  email: 'info@suprimohub.in',
+  url: process.env.NEXT_PUBLIC_SITE_URL || 'https://saralmis.in',
+  email: 'info@saralmis.in',
   emailSecondary: 'chirag.worksplace@gmail.com',
   phone: '+91 93105 93035',
   whatsapp: '919310593035',

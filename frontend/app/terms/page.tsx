@@ -1,4 +1,4 @@
-import SiteLayout from '@/components/SiteLayout'
+﻿import SiteLayout from '@/components/SiteLayout'
 
 export const metadata = { title: 'Terms & Conditions' }
 
@@ -22,7 +22,7 @@ export default function TermsPage() {
               { title: '9. Confidentiality', content: 'Both parties agree to keep confidential any proprietary or sensitive information shared during the course of a project. This includes business strategies, unreleased products, and financial information. This obligation survives the termination of any project agreement.' },
               { title: '10. Termination', content: 'Either party may terminate a project with 14 days written notice. Upon termination, the client will pay for all work completed to date. SARAL MIS will provide all completed work product upon receipt of final payment.' },
               { title: '11. Governing Law', content: 'These terms shall be governed by and construed in accordance with applicable laws. Any disputes arising from these terms or our services shall be resolved through good-faith negotiation, and if necessary, binding arbitration.' },
-              { title: '12. Contact', content: 'For questions about these Terms & Conditions, contact us at legal@suprimohub.in or write to: SARAL MIS, New Delhi, India.' },
+              { title: '12. Contact', content: 'For questions about these Terms & Conditions, contact us at legal@saralmis.in or write to: SARAL MIS, New Delhi, India.' },
             ].map(section => (
               <div key={section.title}>
                 <h2 className="text-xl font-bold font-display text-slate-800 dark:text-white mb-3">{section.title}</h2>

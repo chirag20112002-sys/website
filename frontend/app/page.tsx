@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
@@ -163,7 +163,7 @@ function HeroSection() {
                   <div className="w-3 h-3 rounded-full bg-amber-400" />
                   <div className="w-3 h-3 rounded-full bg-emerald-400" />
                 </div>
-                <div className="flex-1 mx-3 h-5 rounded-md bg-slate-200 text-[10px] text-slate-400 flex items-center px-2">suprimohub.in/dashboard</div>
+                <div className="flex-1 mx-3 h-5 rounded-md bg-slate-200 text-[10px] text-slate-400 flex items-center px-2">saralmis.in/dashboard</div>
               </div>
               <div className="p-5 space-y-4">
                 <div className="grid grid-cols-3 gap-3">

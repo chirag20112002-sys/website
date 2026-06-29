@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState, useEffect } from 'react'
 import {
@@ -31,7 +31,7 @@ const defaults: Record<string, string> = {
   about_image_url: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&q=80',
 
   // Contact
-  email: 'info@suprimohub.in',
+  email: 'info@saralmis.in',
   email_secondary: 'chirag.worksplace@gmail.com',
   phone: '+91 93105 93035',
   whatsapp: '919310593035',

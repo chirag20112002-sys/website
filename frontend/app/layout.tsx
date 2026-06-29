@@ -1,4 +1,4 @@
-import type { Metadata, Viewport } from 'next'
+﻿import type { Metadata, Viewport } from 'next'
 import { ThemeProvider } from 'next-themes'
 import './globals.css'
 
@@ -9,7 +9,7 @@ export const viewport: Viewport = {
 }
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://suprimohub.in'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://saralmis.in'),
   title: {
     default: 'SARAL MIS — Management Information System & Business Software',
     template: '%s | SARAL MIS',
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://suprimohub.in',
+    url: 'https://saralmis.in',
     siteName: 'SARAL MIS',
     title: 'SARAL MIS — Management Information System & Business Software',
     description: 'SARAL MIS provides powerful business management software — CRM, ERP, HRMS, Payroll, Inventory, and custom web solutions.',

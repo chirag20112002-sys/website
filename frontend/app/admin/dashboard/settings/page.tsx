@@ -10,7 +10,6 @@ const defaults: Record<string, string> = {
   // Branding
   site_name: 'SARAL MIS',
   tagline: 'Simplify. Automate. Grow.',
-  logo_url: '',
 
   // Hero
   hero_headline: 'The Smartest Way to Manage Your Business Operations',
@@ -58,7 +57,7 @@ type Section = { id: string; label: string; icon: React.ElementType; keys: strin
 const sections: Section[] = [
   {
     id: 'branding', label: 'Branding', icon: Zap,
-    keys: ['site_name', 'tagline', 'logo_url'],
+    keys: ['site_name', 'tagline'],
   },
   {
     id: 'hero', label: 'Hero Section', icon: Type,
@@ -93,7 +92,6 @@ const sections: Section[] = [
 const fieldMeta: Record<string, { label: string; type?: string; textarea?: boolean; hint?: string }> = {
   site_name:          { label: 'Company Name' },
   tagline:            { label: 'Tagline' },
-  logo_url:           { label: 'Logo Image URL', hint: 'Paste a URL to your logo image' },
   hero_headline:      { label: 'Hero Headline', textarea: true },
   hero_subheadline:   { label: 'Hero Subheadline', textarea: true },
   hero_cta_primary:   { label: 'Primary CTA Button Text' },
@@ -180,8 +178,8 @@ export default function AdminSettingsPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-white">Site Settings</h1>
-          <p className="text-slate-400 text-sm mt-1">Control every piece of content on your website from here.</p>
+          <h1 className="text-2xl font-bold text-slate-800">Site Settings</h1>
+          <p className="text-slate-500 text-sm mt-1">Control every piece of content on your website from here.</p>
         </div>
         <div className="flex items-center gap-3">
           <button onClick={refresh} className="p-2 rounded-lg border border-gray-200 text-slate-400 hover:text-white hover:bg-gray-100 transition-all">

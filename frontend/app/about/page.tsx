@@ -1,10 +1,20 @@
 'use client'
 
-import { useRef } from 'react'
+import { useRef, useEffect, useState } from 'react'
 import Link from 'next/link'
 import { motion, useInView } from 'framer-motion'
 import { Target, Eye, Heart, Zap, Users, Trophy, ArrowRight, CheckCircle, Lightbulb, Globe, Shield, TrendingUp } from 'lucide-react'
 import SiteLayout from '@/components/SiteLayout'
+
+type TeamMember = {
+  id: number
+  name: string
+  role: string
+  bio: string
+  photo: string
+  initials: string
+  color: string
+}
 
 function FadeIn({ children, delay = 0, className = '' }: { children: React.ReactNode; delay?: number; className?: string }) {
   const ref = useRef(null)
@@ -25,45 +35,24 @@ const values = [
   { icon: Users, title: 'Collaborative', desc: 'We work as an extension of your team, keeping you involved and informed throughout the project.' },
 ]
 
-const team = [
-  {
-    name: 'Chirag Chhatwal',
-    role: 'Founder, CEO & Managing Director',
-    initials: 'CC',
-    color: 'from-violet-500 to-purple-700',
-    bio: '8+ years in business software and digital solutions. Passionate about making technology accessible to every Indian business.',
-  },
-  {
-    name: 'Nitin Kumar',
-    role: 'Co-Founder',
-    initials: 'NK',
-    color: 'from-indigo-500 to-blue-700',
-    bio: 'Full-stack engineer specializing in ERP systems, cloud infrastructure, and scalable architectures.',
-  },
-  {
-    name: 'Riya',
-    role: 'Social Media Manager',
-    initials: 'R',
-    color: 'from-pink-500 to-rose-600',
-    bio: 'Crafts compelling brand stories and drives engagement across all digital platforms.',
-  },
-  {
-    name: 'Sonu',
-    role: 'Creative Designer',
-    initials: 'S',
-    color: 'from-emerald-500 to-teal-600',
-    bio: 'Translates ideas into stunning visuals. Specializes in UI/UX and brand identity design.',
-  },
-  {
-    name: 'Sunny Rathor',
-    role: 'Performance Marketing Manager',
-    initials: 'SR',
-    color: 'from-amber-500 to-orange-600',
-    bio: 'Data-driven marketer focused on ROI, paid ads, and growth strategies for Indian markets.',
-  },
+const DEFAULT_TEAM: TeamMember[] = [
+  { id: 1, name: 'Chirag Chhatwal', role: 'Founder, CEO & Managing Director', initials: 'CC', color: 'from-violet-500 to-purple-700', photo: '', bio: '8+ years in business software and digital solutions. Passionate about making technology accessible to every Indian business.' },
+  { id: 2, name: 'Nitin Kumar', role: 'Co-Founder', initials: 'NK', color: 'from-indigo-500 to-blue-700', photo: '', bio: 'Full-stack engineer specializing in ERP systems, cloud infrastructure, and scalable architectures.' },
+  { id: 3, name: 'Riya', role: 'Social Media Manager', initials: 'R', color: 'from-pink-500 to-rose-600', photo: '', bio: 'Crafts compelling brand stories and drives engagement across all digital platforms.' },
+  { id: 4, name: 'Sonu', role: 'Creative Designer', initials: 'S', color: 'from-emerald-500 to-teal-600', photo: '', bio: 'Translates ideas into stunning visuals. Specializes in UI/UX and brand identity design.' },
+  { id: 5, name: 'Sunny Rathor', role: 'Performance Marketing Manager', initials: 'SR', color: 'from-amber-500 to-orange-600', photo: '', bio: 'Data-driven marketer focused on ROI, paid ads, and growth strategies for Indian markets.' },
 ]
 
 export default function AboutPage() {
+  const [team, setTeam] = useState<TeamMember[]>(DEFAULT_TEAM)
+
+  useEffect(() => {
+    fetch('/api/team')
+      .then(r => r.ok ? r.json() : null)
+      .then(data => { if (Array.isArray(data) && data.length > 0) setTeam(data) })
+      .catch(() => {})
+  }, [])
+
   return (
     <SiteLayout>
       {/* Hero */}
@@ -184,9 +173,17 @@ export default function AboutPage() {
             {team.map((m, i) => (
               <FadeIn key={m.name} delay={i * 0.1}>
                 <div className="glass-card p-6 text-center card-hover">
-                  <div className={`w-20 h-20 rounded-2xl bg-gradient-to-br ${m.color} flex items-center justify-center text-white text-2xl font-bold mx-auto mb-4 shadow-lg`}>
-                    {m.initials}
-                  </div>
+                  {m.photo ? (
+                    <img
+                      src={m.photo}
+                      alt={m.name}
+                      className="w-20 h-20 rounded-2xl object-cover mx-auto mb-4 shadow-lg border-2 border-violet-100"
+                    />
+                  ) : (
+                    <div className={`w-20 h-20 rounded-2xl bg-gradient-to-br ${m.color} flex items-center justify-center text-white text-2xl font-bold mx-auto mb-4 shadow-lg`}>
+                      {m.initials}
+                    </div>
+                  )}
                   <h4 className="font-bold text-slate-800 font-display text-lg">{m.name}</h4>
                   <p className="text-violet-600 text-sm font-semibold mb-2">{m.role}</p>
                   <p className="text-xs text-slate-500 leading-relaxed">{m.bio}</p>

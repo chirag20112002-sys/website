@@ -169,18 +169,18 @@ export default function AboutPage() {
             <h2 className="section-heading mb-4">Meet Our <span className="gradient-text">Team</span></h2>
             <p className="section-sub">A passionate group of engineers, designers, and strategists committed to your business success.</p>
           </FadeIn>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
             {team.map((m, i) => (
-              <FadeIn key={m.name} delay={i * 0.1}>
-                <div className="glass-card p-6 text-center card-hover">
+              <FadeIn key={m.name} delay={i * 0.1} className="h-full">
+                <div className="glass-card p-6 text-center card-hover h-full flex flex-col items-center">
                   {m.photo ? (
                     <img
                       src={m.photo}
                       alt={m.name}
-                      className="w-20 h-20 rounded-2xl object-cover mx-auto mb-4 shadow-lg border-2 border-violet-100"
+                      className="w-32 h-32 sm:w-36 sm:h-36 rounded-2xl object-cover mx-auto mb-5 shadow-lg border-2 border-violet-100"
                     />
                   ) : (
-                    <div className={`w-20 h-20 rounded-2xl bg-gradient-to-br ${m.color} flex items-center justify-center text-white text-2xl font-bold mx-auto mb-4 shadow-lg`}>
+                    <div className={`w-32 h-32 sm:w-36 sm:h-36 rounded-2xl bg-gradient-to-br ${m.color} flex items-center justify-center text-white text-4xl font-bold mx-auto mb-5 shadow-lg`}>
                       {m.initials}
                     </div>
                   )}

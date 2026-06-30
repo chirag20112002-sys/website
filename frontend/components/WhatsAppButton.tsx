@@ -3,11 +3,14 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, MessageCircle } from 'lucide-react'
-import { siteConfig } from '@/config/site'
+import { useSiteSettings } from '@/components/SiteSettingsProvider'
 
 export default function WhatsAppButton() {
   const [open, setOpen] = useState(false)
-  const message = encodeURIComponent('Hello SARAL MIS! I am interested in your services.')
+  const settings = useSiteSettings()
+  const whatsapp = settings.whatsapp || '919310593035'
+  const siteName = settings.site_name || 'SARAL MIS'
+  const message = encodeURIComponent(`Hello ${siteName}! I am interested in your services.`)
 
   return (
     <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3">
@@ -24,10 +27,7 @@ export default function WhatsAppButton() {
                 <MessageCircle className="w-5 h-5 text-white" />
               </div>
               <div>
-                <p className="font-semibold text-slate-800 text-sm">
-                  <span style={{ color: '#A78BFA' }}>SARAL</span>
-                  <span style={{ color: '#4C1D95' }}> MIS</span>
-                </p>
+                <p className="font-semibold text-slate-800 text-sm">{siteName}</p>
                 <p className="text-xs text-green-500 flex items-center gap-1">
                   <span className="w-1.5 h-1.5 rounded-full bg-green-500 inline-block animate-pulse" />
                   Online now
@@ -38,7 +38,7 @@ export default function WhatsAppButton() {
               👋 Hi there! How can we help you today? Chat with us on WhatsApp for quick support.
             </p>
             <a
-              href={`https://wa.me/${siteConfig.whatsapp}?text=${message}`}
+              href={`https://wa.me/${whatsapp}?text=${message}`}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-green-500 hover:bg-green-600 text-white font-semibold text-sm transition-colors"

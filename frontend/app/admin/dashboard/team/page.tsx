@@ -106,7 +106,7 @@ export default function AdminTeamPage() {
                 label="Profile Photo"
                 value={form.photo}
                 onChange={url => setForm(f => ({ ...f, photo: url }))}
-                hint="Upload a square photo for best results"
+                hint="Upload a square photo for best results (min 400×400px)"
               />
               <div className="grid grid-cols-2 gap-4">
                 <div>
@@ -134,7 +134,7 @@ export default function AdminTeamPage() {
                       key={c}
                       type="button"
                       onClick={() => setForm(f => ({ ...f, color: c }))}
-                      className={`w-8 h-8 rounded-full bg-gradient-to-br ${c} transition-all ${form.color === c ? 'ring-2 ring-offset-2 ring-violet-500 scale-110' : 'hover:scale-105'}`}
+                      className={`w-9 h-9 rounded-full bg-gradient-to-br ${c} transition-all ${form.color === c ? 'ring-2 ring-offset-2 ring-violet-500 scale-110' : 'hover:scale-105'}`}
                     />
                   ))}
                 </div>
@@ -152,29 +152,45 @@ export default function AdminTeamPage() {
 
       {loading && members.length === 0 ? (
         <div className="text-center py-12 text-slate-400">Loading…</div>
+      ) : members.length === 0 ? (
+        <div className="text-center py-16 bg-white border border-gray-200 rounded-xl">
+          <p className="text-slate-500 mb-4">No team members yet.</p>
+          <button onClick={openCreate} className="btn-primary text-sm">Add First Member</button>
+        </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
           {members.map(m => (
-            <div key={m.id} className="bg-white border border-gray-200 rounded-xl p-5 flex flex-col gap-3">
-              <div className="flex items-center gap-3">
-                {m.photo ? (
-                  <img src={m.photo} alt={m.name} className="w-14 h-14 rounded-full object-cover border-2 border-violet-100" />
-                ) : (
-                  <div className={`w-14 h-14 rounded-full bg-gradient-to-br ${m.color} flex items-center justify-center text-white font-bold text-lg`}>
-                    {m.initials}
-                  </div>
-                )}
-                <div>
-                  <p className="font-bold text-slate-800 text-sm">{m.name}</p>
-                  <p className="text-xs text-violet-600 font-medium">{m.role}</p>
+            <div key={m.id} className="bg-white border border-gray-200 rounded-2xl p-5 flex flex-col items-center text-center gap-3 hover:shadow-md hover:border-violet-200 transition-all">
+              {/* Big photo */}
+              {m.photo ? (
+                <img
+                  src={m.photo}
+                  alt={m.name}
+                  className="w-28 h-28 rounded-2xl object-cover border-2 border-violet-100 shadow-md"
+                />
+              ) : (
+                <div className={`w-28 h-28 rounded-2xl bg-gradient-to-br ${m.color} flex items-center justify-center text-white font-bold text-3xl shadow-md`}>
+                  {m.initials}
                 </div>
+              )}
+              <div>
+                <p className="font-bold text-slate-800 text-base leading-tight">{m.name}</p>
+                <p className="text-xs text-violet-600 font-semibold mt-0.5">{m.role}</p>
               </div>
-              {m.bio && <p className="text-xs text-slate-500 leading-relaxed">{m.bio}</p>}
-              <div className="flex gap-2 mt-auto">
-                <button onClick={() => openEdit(m)} className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg border border-gray-200 text-slate-600 hover:bg-gray-50 text-xs font-medium transition-colors">
+              {m.bio && (
+                <p className="text-xs text-slate-500 leading-relaxed line-clamp-3">{m.bio}</p>
+              )}
+              <div className="flex gap-2 mt-auto w-full">
+                <button
+                  onClick={() => openEdit(m)}
+                  className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl border border-gray-200 text-slate-600 hover:bg-violet-50 hover:border-violet-200 hover:text-violet-700 text-xs font-medium transition-colors"
+                >
                   <Edit className="w-3.5 h-3.5" /> Edit
                 </button>
-                <button onClick={() => handleDelete(m.id)} className="px-3 py-2 rounded-lg border border-red-200 text-red-500 hover:bg-red-50 text-xs transition-colors">
+                <button
+                  onClick={() => handleDelete(m.id)}
+                  className="px-3 py-2 rounded-xl border border-red-200 text-red-500 hover:bg-red-50 text-xs transition-colors"
+                >
                   <Trash2 className="w-3.5 h-3.5" />
                 </button>
               </div>

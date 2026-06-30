@@ -18,7 +18,7 @@ export default function AdminLoginPage() {
     setError('')
     setLoading(true)
     await new Promise(r => setTimeout(r, 800))
-    if (email === 'admin@saralmis.in' && password === 'admin123') {
+    if (email === 'chirag.worksplace@gmail.com' && password === 'XbHL@QSbHN') {
       localStorage.setItem('admin-auth', 'true')
       router.push('/admin/dashboard')
     } else {

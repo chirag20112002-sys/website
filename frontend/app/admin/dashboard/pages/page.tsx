@@ -1,57 +1,109 @@
-﻿'use client'
+'use client'
 
-import { useState } from 'react'
-import { Edit, Save, X } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { Edit2, Save, RefreshCw } from 'lucide-react'
 
 const pages = [
   { id: 'home', label: 'Home Page', fields: [
-    { key: 'heroTitle', label: 'Hero Title', value: 'The Smartest Way to Manage Your Business Operations', type: 'text' },
-    { key: 'heroSubtitle', label: 'Hero Subtitle', value: 'SARAL MIS delivers powerful management software and digital solutions that help businesses digitize, automate, and scale with ease.', type: 'textarea' },
-    { key: 'heroCTA', label: 'CTA Button Text', value: 'Get Started Free', type: 'text' },
-    { key: 'statsProjects', label: 'Projects Count', value: '150', type: 'text' },
-    { key: 'statsClients', label: 'Clients Count', value: '80', type: 'text' },
+    { key: 'hero_headline', label: 'Hero Title', type: 'text' },
+    { key: 'hero_subheadline', label: 'Hero Subtitle', type: 'textarea' },
+    { key: 'hero_cta_primary', label: 'Primary CTA Button', type: 'text' },
+    { key: 'hero_cta_secondary', label: 'Secondary CTA Button', type: 'text' },
+    { key: 'stat1_value', label: 'Stat 1 Value (e.g. 150+)', type: 'text' },
+    { key: 'stat1_label', label: 'Stat 1 Label', type: 'text' },
+    { key: 'stat2_value', label: 'Stat 2 Value', type: 'text' },
+    { key: 'stat2_label', label: 'Stat 2 Label', type: 'text' },
   ]},
   { id: 'about', label: 'About Page', fields: [
-    { key: 'aboutTitle', label: 'Page Title', value: 'We\'re a Team of Digital Builders', type: 'text' },
-    { key: 'aboutStory', label: 'Company Story', value: 'SARAL MIS was founded in 2020 by Chirag Chhatwal and Nitin Kumar to make powerful business software accessible to every Indian business.', type: 'textarea' },
-    { key: 'mission', label: 'Mission Statement', value: 'To empower businesses of every size with world-class digital solutions that drive real, measurable growth.', type: 'textarea' },
-    { key: 'vision', label: 'Vision Statement', value: 'To be the most trusted digital partner for growing businesses worldwide.', type: 'textarea' },
+    { key: 'about_title', label: 'About Section Title', type: 'text' },
+    { key: 'about_text', label: 'Company Description', type: 'textarea' },
   ]},
   { id: 'contact', label: 'Contact Page', fields: [
-    { key: 'contactTitle', label: 'Page Title', value: 'Let\'s Build Something Amazing', type: 'text' },
-    { key: 'contactSubtitle', label: 'Subtitle', value: 'Have a project in mind? Reach out and let\'s have a conversation.', type: 'textarea' },
-    { key: 'responseTime', label: 'Response Time Badge', value: 'We respond within 4 hours', type: 'text' },
+    { key: 'email', label: 'Primary Email', type: 'text' },
+    { key: 'phone', label: 'Phone Number', type: 'text' },
+    { key: 'whatsapp', label: 'WhatsApp Number (digits only)', type: 'text' },
+    { key: 'address', label: 'Office Address', type: 'text' },
+    { key: 'google_maps_url', label: 'Google Maps Embed URL', type: 'textarea' },
+  ]},
+  { id: 'branding', label: 'Branding', fields: [
+    { key: 'site_name', label: 'Company Name', type: 'text' },
+    { key: 'tagline', label: 'Tagline / Slogan', type: 'text' },
   ]},
 ]
 
+const defaults: Record<string, string> = {
+  hero_headline: 'The Smartest Way to Manage Your Business Operations',
+  hero_subheadline: 'SARAL MIS delivers powerful management software and digital solutions that help businesses digitize, automate, and scale with ease.',
+  hero_cta_primary: 'Get Started Free',
+  hero_cta_secondary: 'View Our Work',
+  stat1_value: '150+', stat1_label: 'Projects Delivered',
+  stat2_value: '80+',  stat2_label: 'Happy Clients',
+  about_title: 'About SARAL MIS',
+  about_text: 'We are a technology company specializing in business management software and digital solutions.',
+  email: 'info@saralmis.in',
+  phone: '+91 93105 93035',
+  whatsapp: '919310593035',
+  address: 'New Delhi, India',
+  google_maps_url: '',
+  site_name: 'SARAL MIS',
+  tagline: 'Simplify. Automate. Grow.',
+}
+
 export default function AdminPagesPage() {
   const [activePage, setActivePage] = useState(pages[0])
-  const [fields, setFields] = useState(pages[0].fields)
+  const [settings, setSettings] = useState<Record<string, string>>(defaults)
   const [editing, setEditing] = useState<string | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
 
-  const switchPage = (page: typeof pages[0]) => {
-    setActivePage(page)
-    setFields(page.fields)
-    setEditing(null)
+  const load = () => {
+    setLoading(true)
+    fetch('/api/settings')
+      .then(r => r.json())
+      .then(data => { if (!data.error) setSettings(s => ({ ...s, ...data })) })
+      .finally(() => setLoading(false))
   }
 
-  const updateField = (key: string, value: string) => {
-    setFields(prev => prev.map(f => f.key === key ? { ...f, value } : f))
+  useEffect(() => { load() }, [])
+
+  const handleSave = async () => {
+    setSaving(true)
+    try {
+      const res = await fetch('/api/settings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(settings),
+      })
+      if (res.ok) { setSaved(true); setTimeout(() => setSaved(false), 3000) }
+    } finally {
+      setSaving(false)
+      setEditing(null)
+    }
   }
 
-  const handleSave = () => { setSaved(true); setTimeout(() => setSaved(false), 3000); setEditing(null) }
+  if (loading) return <div className="text-center py-16 text-slate-400">Loading…</div>
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold font-display text-white">Page Content</h1>
-        <p className="text-slate-500 text-sm">Edit text content for each page without touching code.</p>
+    <div className="space-y-6 max-w-4xl">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold font-display text-slate-800">Page Content</h1>
+          <p className="text-slate-500 text-sm">Edit text content for each page without touching code.</p>
+        </div>
+        <div className="flex gap-2">
+          <button onClick={load} className="p-2 rounded-lg border border-gray-200 text-slate-400 hover:bg-gray-100 transition-all">
+            <RefreshCw className="w-4 h-4" />
+          </button>
+          <button onClick={handleSave} disabled={saving} className="btn-primary text-sm py-2.5 px-4">
+            <Save className="w-4 h-4" /> {saving ? 'Saving…' : 'Save All Changes'}
+          </button>
+        </div>
       </div>
 
       {saved && (
-        <div className="p-4 rounded-xl bg-emerald-900/30 border border-emerald-500/30 text-emerald-400 text-sm">
-          ✓ Changes saved successfully!
+        <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-sm font-medium">
+          ✓ Changes saved to database — live on your website now!
         </div>
       )}
 
@@ -62,9 +114,11 @@ export default function AdminPagesPage() {
             {pages.map(p => (
               <button
                 key={p.id}
-                onClick={() => switchPage(p)}
-                className={`w-full text-left px-4 py-3 text-sm font-medium border-b border-gray-200 last:border-0 transition-colors ${
-                  activePage.id === p.id ? 'bg-violet-600 text-white' : 'text-slate-400 hover:bg-gray-100 hover:text-slate-800'
+                onClick={() => { setActivePage(p); setEditing(null) }}
+                className={`w-full text-left px-4 py-3 text-sm font-medium border-b border-gray-100 last:border-0 transition-colors ${
+                  activePage.id === p.id
+                    ? 'bg-violet-600 text-white'
+                    : 'text-slate-600 hover:bg-violet-50 hover:text-violet-700'
                 }`}
               >
                 {p.label}
@@ -74,23 +128,26 @@ export default function AdminPagesPage() {
         </div>
 
         {/* Fields */}
-        <div className="flex-1 space-y-4">
+        <div className="flex-1">
           <div className="bg-white border border-gray-200 rounded-xl p-5">
-            <h2 className="font-bold text-slate-800 font-display mb-5">{activePage.label}</h2>
+            <h2 className="font-bold text-slate-800 font-display mb-5 text-lg">{activePage.label}</h2>
             <div className="space-y-5">
-              {fields.map(f => (
+              {activePage.fields.map(f => (
                 <div key={f.key}>
                   <div className="flex items-center justify-between mb-1.5">
                     <label className="text-sm font-medium text-slate-700">{f.label}</label>
-                    <button onClick={() => setEditing(editing === f.key ? null : f.key)} className="text-xs text-violet-600 hover:text-indigo-300 flex items-center gap-1">
-                      <Edit className="w-3 h-3" /> {editing === f.key ? 'Cancel' : 'Edit'}
+                    <button
+                      onClick={() => setEditing(editing === f.key ? null : f.key)}
+                      className="text-xs text-violet-600 hover:text-violet-700 flex items-center gap-1 font-medium"
+                    >
+                      <Edit2 className="w-3 h-3" /> {editing === f.key ? 'Done' : 'Edit'}
                     </button>
                   </div>
                   {editing === f.key ? (
                     f.type === 'textarea' ? (
                       <textarea
-                        value={f.value}
-                        onChange={e => updateField(f.key, e.target.value)}
+                        value={settings[f.key] || ''}
+                        onChange={e => setSettings(s => ({ ...s, [f.key]: e.target.value }))}
                         rows={3}
                         className="input-field resize-none"
                         autoFocus
@@ -98,22 +155,25 @@ export default function AdminPagesPage() {
                     ) : (
                       <input
                         type="text"
-                        value={f.value}
-                        onChange={e => updateField(f.key, e.target.value)}
+                        value={settings[f.key] || ''}
+                        onChange={e => setSettings(s => ({ ...s, [f.key]: e.target.value }))}
                         className="input-field"
                         autoFocus
                       />
                     )
                   ) : (
-                    <div className="p-3 rounded-lg bg-slate-800 border border-gray-200 text-slate-700 text-sm">
-                      {f.value}
+                    <div
+                      className="px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-700 text-sm cursor-pointer hover:border-violet-300 hover:bg-violet-50/50 transition-colors"
+                      onClick={() => setEditing(f.key)}
+                    >
+                      {settings[f.key] || <span className="text-slate-400 italic">Not set — click to edit</span>}
                     </div>
                   )}
                 </div>
               ))}
             </div>
-            <button onClick={handleSave} className="btn-primary mt-6">
-              <Save className="w-4 h-4" /> Save Changes
+            <button onClick={handleSave} disabled={saving} className="btn-primary mt-6">
+              <Save className="w-4 h-4" /> {saving ? 'Saving…' : 'Save Changes'}
             </button>
           </div>
         </div>

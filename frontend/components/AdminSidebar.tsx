@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import {
   Zap, LayoutDashboard, FileText, Briefcase, MessageSquare, Settings,
   Users, Image, BookOpen, LogOut, ChevronLeft, ChevronRight, Globe,
-  Star, Mail, UserCircle2
+  Star, Mail, UserCircle2, GalleryHorizontalEnd
 } from 'lucide-react'
 
 const navGroups = [
@@ -23,6 +23,7 @@ const navGroups = [
       { href: '/admin/dashboard/pages', icon: Globe, label: 'Pages' },
       { href: '/admin/dashboard/services', icon: Briefcase, label: 'Services' },
       { href: '/admin/dashboard/portfolio', icon: Image, label: 'Portfolio' },
+      { href: '/admin/dashboard/gallery', icon: GalleryHorizontalEnd, label: 'Gallery & Media' },
       { href: '/admin/dashboard/team', icon: UserCircle2, label: 'Team' },
       { href: '/admin/dashboard/testimonials', icon: Star, label: 'Testimonials' },
       { href: '/admin/dashboard/blog', icon: BookOpen, label: 'Blog Posts' },

@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X, Zap, ChevronDown, ArrowRight } from 'lucide-react'
+import { useSiteSettings } from '@/components/SiteSettingsProvider'
 
 const navItems = [
   { label: 'Solutions', href: '/solutions' },
@@ -28,6 +29,7 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [dropdown, setDropdown] = useState<string | null>(null)
   const pathname = usePathname()
+  const settings = useSiteSettings()
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 60)
@@ -38,6 +40,10 @@ export default function Navbar() {
   useEffect(() => { setOpen(false) }, [pathname])
 
   const isHome = pathname === '/'
+  const siteName = settings.site_name || 'SARAL MIS'
+  const [brandPrefix, brandSuffix] = siteName.includes(' ')
+    ? [siteName.split(' ')[0], ' ' + siteName.split(' ').slice(1).join(' ')]
+    : [siteName, '']
 
   return (
     <motion.header
@@ -57,13 +63,23 @@ export default function Navbar() {
 
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2.5 group">
-            <div className="w-8 h-8 rounded-lg gradient-bg flex items-center justify-center shadow-lg shadow-violet-500/30 group-hover:scale-105 transition-transform">
-              <Zap className="w-4 h-4 text-white" />
-            </div>
-            <span className="font-bold text-[17px] tracking-tight font-display">
-              <span style={{ color: isHome && !scrolled ? '#c4b5fd' : '#A78BFA' }}>SARAL</span>
-              <span style={{ color: isHome && !scrolled ? '#ffffff' : '#4C1D95' }}> MIS</span>
-            </span>
+            {settings.logo_url ? (
+              <img
+                src={settings.logo_url}
+                alt={siteName}
+                className="h-8 w-auto object-contain group-hover:scale-105 transition-transform"
+              />
+            ) : (
+              <>
+                <div className="w-8 h-8 rounded-lg gradient-bg flex items-center justify-center shadow-lg shadow-violet-500/30 group-hover:scale-105 transition-transform">
+                  <Zap className="w-4 h-4 text-white" />
+                </div>
+                <span className="font-bold text-[17px] tracking-tight font-display">
+                  <span style={{ color: isHome && !scrolled ? '#c4b5fd' : '#A78BFA' }}>{brandPrefix}</span>
+                  <span style={{ color: isHome && !scrolled ? '#ffffff' : '#4C1D95' }}>{brandSuffix}</span>
+                </span>
+              </>
+            )}
           </Link>
 
           {/* Desktop Nav */}

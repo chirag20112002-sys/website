@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { Zap, Mail, Phone, MapPin, Twitter, Linkedin, Github, Instagram, ArrowRight, Heart } from 'lucide-react'
-import { siteConfig } from '@/config/site'
+import { useSiteSettings } from '@/components/SiteSettingsProvider'
 
 const footerLinks = {
   Solutions: [
@@ -38,14 +38,21 @@ const footerLinks = {
   ],
 }
 
-const socials = [
-  { icon: Twitter, href: siteConfig.social.twitter, label: 'Twitter' },
-  { icon: Linkedin, href: siteConfig.social.linkedin, label: 'LinkedIn' },
-  { icon: Github, href: siteConfig.social.github, label: 'GitHub' },
-  { icon: Instagram, href: siteConfig.social.instagram, label: 'Instagram' },
-]
-
 export default function Footer() {
+  const settings = useSiteSettings()
+
+  const socials = [
+    { icon: Twitter, href: settings.twitter, label: 'Twitter' },
+    { icon: Linkedin, href: settings.linkedin, label: 'LinkedIn' },
+    { icon: Github, href: settings.github, label: 'GitHub' },
+    { icon: Instagram, href: settings.instagram, label: 'Instagram' },
+  ].filter(s => s.href)
+
+  const siteName = settings.site_name || 'SARAL MIS'
+  const [brandPrefix, brandSuffix] = siteName.includes(' ')
+    ? [siteName.split(' ')[0], ' ' + siteName.split(' ').slice(1).join(' ')]
+    : [siteName, '']
+
   return (
     <footer className="relative bg-[#1e0a4a] border-t border-violet-900/40 overflow-hidden">
       {/* Background glows */}
@@ -84,54 +91,62 @@ export default function Footer() {
           {/* Brand Column */}
           <div className="lg:col-span-2">
             <Link href="/" className="flex items-center gap-2.5 mb-5 group">
-              <div className="w-8 h-8 rounded-lg gradient-bg flex items-center justify-center shadow-lg shadow-indigo-500/30">
-                <Zap className="w-4 h-4 text-white" />
-              </div>
-              <span className="font-bold text-[17px] font-display">
-              <span style={{ color: '#A78BFA' }}>SARAL</span>
-              <span className="text-white"> MIS</span>
-            </span>
+              {settings.logo_url ? (
+                <img src={settings.logo_url} alt={siteName} className="h-8 w-auto object-contain" />
+              ) : (
+                <>
+                  <div className="w-8 h-8 rounded-lg gradient-bg flex items-center justify-center shadow-lg shadow-indigo-500/30">
+                    <Zap className="w-4 h-4 text-white" />
+                  </div>
+                  <span className="font-bold text-[17px] font-display">
+                    <span style={{ color: '#A78BFA' }}>{brandPrefix}</span>
+                    <span className="text-white">{brandSuffix}</span>
+                  </span>
+                </>
+              )}
             </Link>
             <p className="text-slate-400 text-sm leading-relaxed mb-6 max-w-xs">
-              We build beautiful digital experiences and powerful business software that helps companies grow, automate, and scale.
+              {settings.tagline || 'We build beautiful digital experiences and powerful business software that helps companies grow, automate, and scale.'}
             </p>
             {/* Contact */}
             <div className="space-y-3">
-              <a href={`mailto:${siteConfig.email}`} className="flex items-center gap-3 text-slate-400 hover:text-indigo-400 transition-colors text-sm group">
+              <a href={`mailto:${settings.email}`} className="flex items-center gap-3 text-slate-400 hover:text-indigo-400 transition-colors text-sm group">
                 <div className="w-7 h-7 rounded-lg bg-indigo-500/10 flex items-center justify-center flex-shrink-0 group-hover:bg-indigo-500/20 transition-colors">
                   <Mail className="w-3.5 h-3.5 text-indigo-400" />
                 </div>
-                {siteConfig.email}
+                {settings.email}
               </a>
-              <a href={`tel:${siteConfig.phone}`} className="flex items-center gap-3 text-slate-400 hover:text-indigo-400 transition-colors text-sm group">
+              <a href={`tel:${settings.phone}`} className="flex items-center gap-3 text-slate-400 hover:text-indigo-400 transition-colors text-sm group">
                 <div className="w-7 h-7 rounded-lg bg-indigo-500/10 flex items-center justify-center flex-shrink-0 group-hover:bg-indigo-500/20 transition-colors">
                   <Phone className="w-3.5 h-3.5 text-indigo-400" />
                 </div>
-                {siteConfig.phone}
+                {settings.phone}
               </a>
               <div className="flex items-center gap-3 text-slate-400 text-sm">
                 <div className="w-7 h-7 rounded-lg bg-indigo-500/10 flex items-center justify-center flex-shrink-0">
                   <MapPin className="w-3.5 h-3.5 text-indigo-400" />
                 </div>
-                {siteConfig.address}
+                {settings.address}
               </div>
             </div>
 
             {/* Social */}
-            <div className="flex gap-2.5 mt-6">
-              {socials.map((s) => (
-                <a
-                  key={s.label}
-                  href={s.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={s.label}
-                  className="w-9 h-9 rounded-xl bg-slate-800 hover:bg-indigo-600 border border-slate-700 hover:border-indigo-500 flex items-center justify-center text-slate-400 hover:text-white transition-all duration-200 hover:scale-110"
-                >
-                  <s.icon size={15} />
-                </a>
-              ))}
-            </div>
+            {socials.length > 0 && (
+              <div className="flex gap-2.5 mt-6">
+                {socials.map((s) => (
+                  <a
+                    key={s.label}
+                    href={s.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={s.label}
+                    className="w-9 h-9 rounded-xl bg-slate-800 hover:bg-indigo-600 border border-slate-700 hover:border-indigo-500 flex items-center justify-center text-slate-400 hover:text-white transition-all duration-200 hover:scale-110"
+                  >
+                    <s.icon size={15} />
+                  </a>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Link Columns */}
@@ -159,7 +174,7 @@ export default function Footer() {
       {/* Bottom Bar */}
       <div className="border-t border-slate-800/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500">
-          <p>© {new Date().getFullYear()} SARAL MIS. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} {siteName}. All rights reserved.</p>
           <p className="flex items-center gap-1.5">
             Built with <Heart className="w-3.5 h-3.5 text-rose-500 fill-rose-500" /> for amazing businesses
           </p>

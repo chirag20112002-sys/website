@@ -12,6 +12,8 @@ import {
   ChevronLeft, ChevronRight,
 } from 'lucide-react'
 import SiteLayout from '@/components/SiteLayout'
+import GalleryShowcase from '@/components/GalleryShowcase'
+import { useSiteSettings } from '@/components/SiteSettingsProvider'
 import { siteConfig, solutions, products, technologies, processSteps, industries } from '@/config/site'
 
 /* ─── helpers ─────────────────────────────────────────────── */
@@ -66,10 +68,15 @@ function Icon({ name, className }: { name: string; className?: string }) {
 }
 
 /* ─── Section: Hero (background video) ──────────────────────── */
-// Change this URL to swap the background video
-const BG_VIDEO_URL = 'https://assets.mixkit.co/videos/preview/mixkit-businessman-working-on-a-laptop-with-graphs-4835-large.mp4'
+// Fallback video used only if none is set in Admin → Settings → Hero
+const FALLBACK_VIDEO = 'https://assets.mixkit.co/videos/preview/mixkit-businessman-working-on-a-laptop-with-graphs-4835-large.mp4'
 
 function HeroSection() {
+  const settings = useSiteSettings()
+  const headline = settings.hero_headline || siteConfig.headline
+  const words = headline.split(' ')
+  const videoUrl = settings.hero_video_url || FALLBACK_VIDEO
+
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden bg-[#0f0520]">
       {/* Background video */}
@@ -78,8 +85,9 @@ function HeroSection() {
         muted
         loop
         playsInline
+        key={videoUrl}
         className="absolute inset-0 w-full h-full object-cover opacity-25"
-        src={BG_VIDEO_URL}
+        src={videoUrl}
       />
       {/* Deep purple gradient overlay keeps text readable */}
       <div className="absolute inset-0 bg-gradient-to-br from-[#1e0a4a]/95 via-violet-950/90 to-purple-950/85" />
@@ -95,7 +103,7 @@ function HeroSection() {
           <div>
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
               <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 border border-white/20 text-white text-sm font-semibold mb-6">
-                <Sparkles className="w-3.5 h-3.5 text-violet-300" /> {siteConfig.tagline}
+                <Sparkles className="w-3.5 h-3.5 text-violet-300" /> {settings.tagline || siteConfig.tagline}
               </span>
             </motion.div>
 
@@ -104,11 +112,11 @@ function HeroSection() {
               transition={{ duration: 0.6, delay: 0.1 }}
               className="text-5xl sm:text-6xl lg:text-7xl font-bold leading-[1.05] tracking-tight mb-6 text-white"
             >
-              {siteConfig.headline.split(' ').slice(0, 3).join(' ')}{' '}
+              {words.slice(0, 3).join(' ')}{' '}
               <span className="bg-gradient-to-r from-violet-300 via-purple-300 to-fuchsia-300 bg-clip-text text-transparent">
-                {siteConfig.headline.split(' ').slice(3, 6).join(' ')}
+                {words.slice(3, 6).join(' ')}
               </span>
-              {' '}{siteConfig.headline.split(' ').slice(6).join(' ')}
+              {words.length > 6 ? ' ' + words.slice(6).join(' ') : ''}
             </motion.h1>
 
             <motion.p
@@ -116,7 +124,7 @@ function HeroSection() {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="text-xl text-white/70 leading-relaxed mb-8 max-w-xl"
             >
-              {siteConfig.subheadline}
+              {settings.hero_subheadline || siteConfig.subheadline}
             </motion.p>
 
             <motion.div
@@ -125,7 +133,7 @@ function HeroSection() {
               className="flex flex-wrap items-center gap-4 mb-10"
             >
               <Link href={siteConfig.cta.primary.href} className="btn-primary text-base px-7 py-3.5 shadow-lg shadow-violet-500/40">
-                {siteConfig.cta.primary.label} <ArrowRight className="w-5 h-5" />
+                {settings.hero_cta_primary || siteConfig.cta.primary.label} <ArrowRight className="w-5 h-5" />
               </Link>
               <Link href="/portfolio" className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl border border-white/30 text-white font-semibold hover:bg-white/10 transition-all text-base">
                 View Our Work <ArrowUpRight className="w-4 h-4" />
@@ -272,19 +280,34 @@ function MarqueeStrip() {
 }
 
 /* ─── Section: Stats ─────────────────────────────────────────── */
+// Splits a value like "150+" into number (150) and suffix ("+") for the counter
+function parseStat(value: string): { num: number; suffix: string } {
+  const m = (value || '').match(/^(\d+)(.*)$/)
+  return m ? { num: parseInt(m[1], 10), suffix: m[2] } : { num: 0, suffix: value || '' }
+}
+
 function StatsSection() {
+  const settings = useSiteSettings()
+  const stats = [1, 2, 3, 4].map(n => ({
+    value: (settings as any)[`stat${n}_value`] as string,
+    label: (settings as any)[`stat${n}_label`] as string,
+  })).filter(s => s.value || s.label)
+
   return (
     <section className="py-16 bg-slate-50 border-y border-slate-200/60">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-0 lg:divide-x divide-slate-200">
-          {siteConfig.stats.map((stat, i) => (
-            <FadeIn key={stat.label} delay={i * 0.1} className="text-center lg:px-8">
-              <p className="text-4xl lg:text-5xl font-bold gradient-text font-display mb-1">
-                <Counter to={stat.value} suffix={stat.suffix} />
-              </p>
-              <p className="text-slate-500 text-sm font-medium">{stat.label}</p>
-            </FadeIn>
-          ))}
+          {stats.map((stat, i) => {
+            const { num, suffix } = parseStat(stat.value)
+            return (
+              <FadeIn key={stat.label || i} delay={i * 0.1} className="text-center lg:px-8">
+                <p className="text-4xl lg:text-5xl font-bold gradient-text font-display mb-1">
+                  {num > 0 ? <Counter to={num} suffix={suffix} /> : stat.value}
+                </p>
+                <p className="text-slate-500 text-sm font-medium">{stat.label}</p>
+              </FadeIn>
+            )
+          })}
         </div>
       </div>
     </section>
@@ -678,6 +701,7 @@ export default function HomePage() {
       <StatsSection />
       <SolutionsSection />
       <ProductsSection />
+      <GalleryShowcase />
       <ProcessSection />
       <TechSection />
       <IndustriesSection />

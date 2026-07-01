@@ -67,7 +67,7 @@ export default function Navbar() {
               <img
                 src={settings.logo_url}
                 alt={siteName}
-                className="h-12 w-auto object-contain group-hover:scale-105 transition-transform"
+                className="h-24 w-auto object-contain group-hover:scale-105 transition-transform"
               />
             ) : (
               <>

@@ -4,6 +4,7 @@ import { useState, useRef } from 'react'
 import { motion, useInView } from 'framer-motion'
 import { Mail, Phone, MapPin, Send, CheckCircle, MessageCircle, Clock, ArrowRight } from 'lucide-react'
 import SiteLayout from '@/components/SiteLayout'
+import { useSiteSettings } from '@/components/SiteSettingsProvider'
 
 function FadeIn({ children, delay = 0, className = '' }: { children: React.ReactNode; delay?: number; className?: string }) {
   const ref = useRef(null)
@@ -25,6 +26,7 @@ const contactInfo = [
 const services = ['Website Development', 'Shopify Store Development', 'Shopify Customization', 'Admin Panel Development', 'E-Commerce Solutions', 'Web Application', 'UI/UX Design', 'Business Automation', 'Maintenance & Support', 'Other']
 
 export default function ContactPage() {
+  const settings = useSiteSettings()
   const [form, setForm] = useState({ name: '', email: '', phone: '', company: '', service: '', budget: '', message: '' })
   const [sent, setSent] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -211,19 +213,28 @@ export default function ContactPage() {
         </div>
       </section>
 
-      {/* Map placeholder */}
-      <section id="map" className="h-80 bg-slate-200 dark:bg-slate-800 relative overflow-hidden">
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="text-center">
-            <MapPin className="w-12 h-12 text-indigo-500 mx-auto mb-2" />
-            <p className="text-slate-600 font-medium">New Delhi, India</p>
-            <a href="https://maps.google.com/maps?q=New+Delhi,+India" target="_blank" rel="noopener noreferrer" className="text-violet-500 text-sm hover:underline mt-1 inline-flex items-center gap-1">
-              Open in Google Maps <ArrowRight className="w-3 h-3" />
-            </a>
+      {/* Map */}
+      <section id="map" className="h-80 relative overflow-hidden">
+        {settings.google_maps_url ? (
+          <iframe
+            src={settings.google_maps_url}
+            width="100%"
+            height="100%"
+            style={{ border: 0 }}
+            allowFullScreen
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+            className="absolute inset-0 w-full h-full"
+          />
+        ) : (
+          <div className="absolute inset-0 bg-slate-200 flex items-center justify-center">
+            <div className="text-center">
+              <MapPin className="w-12 h-12 text-indigo-500 mx-auto mb-2" />
+              <p className="text-slate-600 font-medium">New Delhi, India</p>
+              <p className="text-slate-400 text-xs mt-1">Add a Google Maps embed URL in Admin → Settings → Contact Info</p>
+            </div>
           </div>
-        </div>
-        {/* Grid overlay */}
-        <div className="absolute inset-0 bg-grid opacity-50" />
+        )}
       </section>
     </SiteLayout>
   )

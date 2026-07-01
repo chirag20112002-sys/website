@@ -86,11 +86,11 @@ export default function AdminBlogPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold font-display text-white">Blog Posts</h1>
+          <h1 className="text-2xl font-bold font-display text-slate-800">Blog Posts</h1>
           <p className="text-slate-500 text-sm">{posts.length} posts total</p>
         </div>
         <div className="flex gap-2">
-          <button onClick={load} className="p-2 rounded-lg border border-gray-200 text-slate-400 hover:text-white hover:bg-gray-100 transition-all">
+          <button onClick={load} className="p-2 rounded-lg border border-gray-200 text-slate-400 hover:text-slate-600 hover:bg-gray-100 transition-all">
             <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
           </button>
           <button onClick={openCreate} className="btn-primary text-sm py-2.5">
@@ -168,11 +168,11 @@ export default function AdminBlogPage() {
                 <th className="text-left p-4 text-xs font-semibold text-slate-400 uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800">
+            <tbody className="divide-y divide-gray-200">
               {filtered.map(post => (
                 <tr key={post.id} className="hover:bg-gray-100/50 transition-colors">
                   <td className="p-4">
-                    <p className="text-sm font-medium text-white truncate max-w-xs">{post.title}</p>
+                    <p className="text-sm font-medium text-slate-800 truncate max-w-xs">{post.title}</p>
                     <p className="text-xs text-slate-500 flex items-center gap-1 mt-0.5">
                       <Calendar className="w-3 h-3" />{new Date(post.created_at).toLocaleDateString()}
                     </p>

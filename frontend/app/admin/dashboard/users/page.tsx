@@ -33,7 +33,7 @@ export default function AdminUsersPage() {
     <div className="space-y-6 max-w-4xl">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold font-display text-white">Admin Users</h1>
+          <h1 className="text-2xl font-bold font-display text-slate-800">Admin Users</h1>
           <p className="text-slate-500 text-sm">{users.length} users</p>
         </div>
         <button onClick={() => setShowForm(true)} className="btn-primary text-sm py-2.5">
@@ -94,7 +94,7 @@ export default function AdminUsersPage() {
               <th className="text-left p-4 text-xs font-semibold text-slate-400 uppercase">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-800">
+          <tbody className="divide-y divide-gray-200">
             {users.map(u => {
               const roleInfo = getRoleInfo(u.role)
               return (
@@ -105,7 +105,7 @@ export default function AdminUsersPage() {
                         {u.name.charAt(0)}
                       </div>
                       <div>
-                        <p className="text-sm font-medium text-white">{u.name}</p>
+                        <p className="text-sm font-medium text-slate-800">{u.name}</p>
                         <p className="text-xs text-slate-500">{u.email}</p>
                       </div>
                     </div>

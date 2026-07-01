@@ -82,11 +82,11 @@ export default function AdminPortfolioPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold font-display text-white">Portfolio</h1>
+          <h1 className="text-2xl font-bold font-display text-slate-800">Portfolio</h1>
           <p className="text-slate-500 text-sm">{projects.length} projects</p>
         </div>
         <div className="flex gap-2">
-          <button onClick={load} className="p-2 rounded-lg border border-gray-200 text-slate-400 hover:text-white hover:bg-gray-100 transition-all">
+          <button onClick={load} className="p-2 rounded-lg border border-gray-200 text-slate-400 hover:text-slate-600 hover:bg-gray-100 transition-all">
             <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
           </button>
           <button onClick={openCreate} className="btn-primary text-sm py-2.5">

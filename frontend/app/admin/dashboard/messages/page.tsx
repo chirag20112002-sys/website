@@ -59,10 +59,10 @@ export default function AdminMessagesPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold font-display text-white">Contact Inquiries</h1>
+          <h1 className="text-2xl font-bold font-display text-slate-800">Contact Inquiries</h1>
           <p className="text-slate-500 text-sm">{messages.filter(m => m.status === 'new').length} new, {messages.length} total</p>
         </div>
-        <button onClick={load} className="p-2 rounded-lg border border-gray-200 text-slate-400 hover:text-white hover:bg-gray-100 transition-all">
+        <button onClick={load} className="p-2 rounded-lg border border-gray-200 text-slate-400 hover:text-slate-600 hover:bg-gray-100 transition-all">
           <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
         </button>
       </div>
@@ -82,13 +82,13 @@ export default function AdminMessagesPage() {
                 className={`p-4 rounded-xl border cursor-pointer transition-all ${
                   selected?.id === m.id
                     ? 'border-indigo-500 bg-indigo-900/10'
-                    : 'border-gray-200 bg-slate-900 hover:border-gray-200'
+                    : 'border-gray-200 bg-white hover:border-violet-200'
                 }`}
               >
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
-                      <p className="font-medium text-white text-sm">{m.name}</p>
+                      <p className="font-medium text-slate-800 text-sm">{m.name}</p>
                       <span className={`badge text-xs ${statusColor(m.status)}`}>{m.status}</span>
                     </div>
                     <p className="text-xs text-slate-400 mb-1">{m.company} · {m.service}</p>
@@ -109,13 +109,13 @@ export default function AdminMessagesPage() {
               <div className="bg-white border border-gray-200 rounded-xl p-5 sticky top-4">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="font-bold text-slate-800 font-display">Message Detail</h3>
-                  <button onClick={() => setSelected(null)} className="text-slate-500 hover:text-white"><X className="w-4 h-4" /></button>
+                  <button onClick={() => setSelected(null)} className="text-slate-500 hover:text-slate-700"><X className="w-4 h-4" /></button>
                 </div>
 
                 <div className="space-y-3 mb-5">
                   <div>
                     <p className="text-xs text-slate-500">From</p>
-                    <p className="font-medium text-white">{selected.name}</p>
+                    <p className="font-medium text-slate-800">{selected.name}</p>
                     <p className="text-sm text-violet-600">{selected.email}</p>
                   </div>
                   <div className="grid grid-cols-2 gap-3">
@@ -138,7 +138,7 @@ export default function AdminMessagesPage() {
                   </div>
                   <div>
                     <p className="text-xs text-slate-500 mb-1">Message</p>
-                    <p className="text-sm text-slate-700 leading-relaxed bg-slate-800 rounded-lg p-3">{selected.message}</p>
+                    <p className="text-sm text-slate-700 leading-relaxed bg-slate-50 rounded-lg p-3">{selected.message}</p>
                   </div>
                   <p className="text-xs text-slate-500 flex items-center gap-1"><Clock className="w-3 h-3" /> {formatDate(selected.created_at)}</p>
                 </div>

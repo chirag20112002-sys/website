@@ -1,8 +1,8 @@
 'use client'
 
-import { useRef } from 'react'
+import { useRef, useEffect, useState } from 'react'
 import { motion, useInView } from 'framer-motion'
-import { Users, FileText, Briefcase, Star, TrendingUp, Eye, ArrowUp, Mail, Activity, Globe } from 'lucide-react'
+import { Users, FileText, Briefcase, Star, ArrowUp, Mail, Activity, Globe, RefreshCw, Clock } from 'lucide-react'
 import Link from 'next/link'
 
 function FadeIn({ children, delay = 0, className = '' }: { children: React.ReactNode; delay?: number; className?: string }) {
@@ -15,34 +15,95 @@ function FadeIn({ children, delay = 0, className = '' }: { children: React.React
   )
 }
 
-const stats = [
-  { label: 'Total Page Views', value: '24,895', change: '+18.2%', icon: Eye, bg: 'bg-violet-50', iconColor: 'text-violet-600' },
-  { label: 'Contact Inquiries', value: '142', change: '+12.5%', icon: Mail, bg: 'bg-emerald-50', iconColor: 'text-emerald-600' },
-  { label: 'Portfolio Projects', value: '9', change: '+3', icon: Briefcase, bg: 'bg-blue-50', iconColor: 'text-blue-600' },
-  { label: 'Testimonials', value: '10', change: '+2', icon: Star, bg: 'bg-amber-50', iconColor: 'text-amber-600' },
-]
-
 const quickLinks = [
-  { href: '/admin/dashboard/blog', label: 'Add Blog Post', icon: FileText, desc: 'Publish new articles' },
+  { href: '/admin/dashboard/messages', label: 'View Inquiries', icon: Mail, desc: 'Read contact form messages' },
   { href: '/admin/dashboard/portfolio', label: 'Add Project', icon: Briefcase, desc: 'Showcase new work' },
   { href: '/admin/dashboard/team', label: 'Manage Team', icon: Users, desc: 'Update team members' },
   { href: '/admin/dashboard/settings', label: 'Site Settings', icon: Globe, desc: 'Manage SEO & meta' },
 ]
 
-const recentMessages = [
-  { name: 'Rajesh Agarwal', email: 'rajesh@agarwaltraders.in', service: 'ERP Development', time: '2 hours ago', status: 'new' },
-  { name: 'Pooja Mehta', email: 'pooja@techstartup.in', service: 'HRMS & Payroll', time: '5 hours ago', status: 'new' },
-  { name: 'Sunil Verma', email: 'sunil@vermaenterprises.in', service: 'CRM System', time: '1 day ago', status: 'replied' },
-  { name: 'Anita Sharma', email: 'anita@sharmagroup.com', service: 'Inventory Management', time: '2 days ago', status: 'replied' },
-  { name: 'Mohammed Farouk', email: 'farouk@gulflogistics.ae', service: 'Business Software', time: '3 days ago', status: 'closed' },
-]
+const DAY_LABELS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+
+type Message = {
+  id: string
+  name: string
+  email: string
+  company: string
+  service: string
+  created_at: string
+  status: string
+}
 
 export default function AdminDashboardPage() {
+  const [loading, setLoading] = useState(true)
+  const [messages, setMessages] = useState<Message[]>([])
+  const [portfolioCount, setPortfolioCount] = useState(0)
+  const [testimonialCount, setTestimonialCount] = useState(0)
+  const [serviceCount, setServiceCount] = useState(0)
+
+  const load = async () => {
+    setLoading(true)
+    try {
+      const [msgRes, portRes, testRes, svcRes] = await Promise.all([
+        fetch('/api/contact'),
+        fetch('/api/portfolio?admin=true'),
+        fetch('/api/testimonials?admin=true'),
+        fetch('/api/services?admin=true'),
+      ])
+      if (msgRes.ok) setMessages(await msgRes.json())
+      if (portRes.ok) setPortfolioCount((await portRes.json()).length)
+      if (testRes.ok) setTestimonialCount((await testRes.json()).length)
+      if (svcRes.ok) setServiceCount((await svcRes.json()).length)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => { load() }, [])
+
+  const newCount = messages.filter(m => m.status === 'new').length
+  const recentMessages = messages.slice(0, 5)
+
+  // Build last-7-days chart from real message timestamps
+  const chartData = (() => {
+    const today = new Date()
+    const days = Array.from({ length: 7 }, (_, i) => {
+      const d = new Date(today)
+      d.setDate(today.getDate() - (6 - i))
+      return { label: DAY_LABELS[d.getDay()], date: d.toDateString(), count: 0 }
+    })
+    messages.forEach(m => {
+      const msgDate = new Date(m.created_at).toDateString()
+      const slot = days.find(d => d.date === msgDate)
+      if (slot) slot.count++
+    })
+    return days
+  })()
+
+  const maxCount = Math.max(...chartData.map(d => d.count), 1)
+
+  const stats = [
+    { label: 'Contact Inquiries', value: messages.length, sub: `${newCount} new`, icon: Mail, bg: 'bg-violet-50', iconColor: 'text-violet-600' },
+    { label: 'Portfolio Projects', value: portfolioCount, sub: 'total added', icon: Briefcase, bg: 'bg-blue-50', iconColor: 'text-blue-600' },
+    { label: 'Testimonials', value: testimonialCount, sub: 'in database', icon: Star, bg: 'bg-amber-50', iconColor: 'text-amber-600' },
+    { label: 'Active Services', value: serviceCount, sub: 'on website', icon: Globe, bg: 'bg-emerald-50', iconColor: 'text-emerald-600' },
+  ]
+
+  const statusColor = (s: string) =>
+    s === 'new' ? 'bg-violet-100 text-violet-700' :
+    s === 'replied' ? 'bg-emerald-100 text-emerald-700' :
+    'bg-gray-100 text-slate-500'
+
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold font-display text-slate-800 mb-1">Dashboard Overview</h1>
-        <p className="text-slate-500 text-sm">Welcome back, Admin. Here's what's happening.</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold font-display text-slate-800 mb-1">Dashboard Overview</h1>
+          <p className="text-slate-500 text-sm">Live data from your database.</p>
+        </div>
+        <button onClick={load} className="p-2 rounded-lg border border-gray-200 text-slate-400 hover:text-slate-600 hover:bg-gray-100 transition-all" title="Refresh">
+          <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+        </button>
       </div>
 
       {/* Stats */}
@@ -54,12 +115,25 @@ export default function AdminDashboardPage() {
                 <div className={`w-10 h-10 rounded-xl ${s.bg} flex items-center justify-center`}>
                   <s.icon className={`w-5 h-5 ${s.iconColor}`} />
                 </div>
-                <span className="flex items-center gap-1 text-xs font-semibold text-emerald-600">
-                  <ArrowUp className="w-3 h-3" /> {s.change}
-                </span>
+                {loading ? (
+                  <div className="w-8 h-4 bg-gray-100 rounded animate-pulse" />
+                ) : (
+                  <span className="flex items-center gap-1 text-xs font-semibold text-emerald-600">
+                    <ArrowUp className="w-3 h-3" /> Live
+                  </span>
+                )}
               </div>
-              <p className="text-2xl font-bold text-slate-800 mb-1">{s.value}</p>
-              <p className="text-xs text-slate-500">{s.label}</p>
+              {loading ? (
+                <div className="space-y-2">
+                  <div className="w-12 h-7 bg-gray-100 rounded animate-pulse" />
+                  <div className="w-20 h-3 bg-gray-100 rounded animate-pulse" />
+                </div>
+              ) : (
+                <>
+                  <p className="text-2xl font-bold text-slate-800 mb-1">{s.value}</p>
+                  <p className="text-xs text-slate-500">{s.label} · {s.sub}</p>
+                </>
+              )}
             </div>
           </FadeIn>
         ))}
@@ -93,54 +167,81 @@ export default function AdminDashboardPage() {
               <h2 className="font-bold text-slate-800 font-display">Recent Inquiries</h2>
               <Link href="/admin/dashboard/messages" className="text-xs text-violet-600 hover:text-violet-700">View all</Link>
             </div>
-            <div className="space-y-2">
-              {recentMessages.map(msg => (
-                <div key={msg.email} className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer">
-                  <div className="w-9 h-9 rounded-full gradient-bg flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
-                    {msg.name.charAt(0)}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 justify-between">
-                      <p className="text-sm font-medium text-slate-700 truncate">{msg.name}</p>
-                      <span className={`badge text-xs flex-shrink-0 ${
-                        msg.status === 'new' ? 'bg-violet-100 text-violet-700' :
-                        msg.status === 'replied' ? 'bg-emerald-100 text-emerald-700' :
-                        'bg-slate-100 text-slate-500'
-                      }`}>{msg.status}</span>
+            {loading ? (
+              <div className="space-y-3">
+                {[1,2,3].map(i => (
+                  <div key={i} className="flex items-center gap-3 p-3">
+                    <div className="w-9 h-9 rounded-full bg-gray-100 animate-pulse flex-shrink-0" />
+                    <div className="flex-1 space-y-1.5">
+                      <div className="w-32 h-3 bg-gray-100 rounded animate-pulse" />
+                      <div className="w-48 h-2.5 bg-gray-100 rounded animate-pulse" />
                     </div>
-                    <p className="text-xs text-slate-400 truncate">{msg.service} · {msg.time}</p>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            ) : recentMessages.length === 0 ? (
+              <p className="text-sm text-slate-400 text-center py-8">No inquiries yet.</p>
+            ) : (
+              <div className="space-y-1">
+                {recentMessages.map(msg => (
+                  <div key={msg.id} className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
+                    <div className="w-9 h-9 rounded-full gradient-bg flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
+                      {msg.name.charAt(0)}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 justify-between">
+                        <p className="text-sm font-medium text-slate-700 truncate">{msg.name}</p>
+                        <span className={`badge text-xs flex-shrink-0 ${statusColor(msg.status)}`}>{msg.status}</span>
+                      </div>
+                      <p className="text-xs text-slate-400 truncate flex items-center gap-1">
+                        {msg.service && <span>{msg.service} · </span>}
+                        <Clock className="w-2.5 h-2.5 inline" />
+                        {' '}{new Date(msg.created_at).toLocaleDateString()}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </FadeIn>
       </div>
 
-      {/* Activity chart */}
+      {/* Activity chart — messages per day (last 7 days) */}
       <FadeIn delay={0.2}>
         <div className="bg-white border border-gray-200 rounded-xl p-5">
           <div className="flex items-center justify-between mb-5">
             <h2 className="font-bold text-slate-800 font-display flex items-center gap-2">
-              <Activity className="w-4 h-4 text-violet-600" /> Site Activity (Last 7 Days)
+              <Activity className="w-4 h-4 text-violet-600" /> Contact Inquiries — Last 7 Days
             </h2>
-            <select className="text-xs bg-gray-50 border border-gray-200 text-slate-600 px-3 py-1.5 rounded-lg focus:outline-none">
-              <option>Last 7 days</option>
-              <option>Last 30 days</option>
-            </select>
+            <span className="text-xs text-slate-400">{messages.length} total messages</span>
           </div>
-          <div className="flex items-end gap-2 h-32">
-            {[65, 80, 55, 90, 70, 85, 95].map((h, i) => (
-              <div key={i} className="flex-1 flex flex-col items-center gap-1">
-                <div
-                  className="w-full rounded-t-lg gradient-bg opacity-70 hover:opacity-100 transition-opacity cursor-pointer"
-                  style={{ height: `${h}%` }}
-                  title={`Day ${i + 1}: ${h * 10} views`}
-                />
-                <span className="text-xs text-slate-400">{['M', 'T', 'W', 'T', 'F', 'S', 'S'][i]}</span>
-              </div>
-            ))}
-          </div>
+          {loading ? (
+            <div className="flex items-end gap-2 h-32">
+              {[1,2,3,4,5,6,7].map(i => (
+                <div key={i} className="flex-1 flex flex-col items-center gap-1">
+                  <div className="w-full bg-gray-100 rounded-t-lg animate-pulse" style={{ height: `${Math.random() * 60 + 20}%` }} />
+                  <div className="w-5 h-2.5 bg-gray-100 rounded animate-pulse" />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="flex items-end gap-2 h-32">
+              {chartData.map((d, i) => (
+                <div key={i} className="flex-1 flex flex-col items-center gap-1">
+                  <div
+                    className="w-full rounded-t-lg gradient-bg transition-all duration-500 cursor-pointer hover:opacity-90"
+                    style={{ height: `${(d.count / maxCount) * 100}%`, minHeight: d.count > 0 ? '6px' : '2px', opacity: d.count > 0 ? 0.8 : 0.15 }}
+                    title={`${d.label}: ${d.count} message${d.count !== 1 ? 's' : ''}`}
+                  />
+                  <span className="text-xs text-slate-400">{d.label}</span>
+                </div>
+              ))}
+            </div>
+          )}
+          {!loading && messages.length === 0 && (
+            <p className="text-xs text-slate-400 text-center mt-2">No messages yet — chart will populate as inquiries come in.</p>
+          )}
         </div>
       </FadeIn>
     </div>
